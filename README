@@ -1,0 +1,6 @@
+Carlos Sanchez <csanchez@maestrodev.com>
+2010-03-01
+
+A puppet recipe for Apache Maven, to download artifacts from a Maven repository
+
+It uses Apache Buildr library to download the artifacts.

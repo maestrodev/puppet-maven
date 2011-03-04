@@ -5,3 +5,23 @@ http://www.maestrodev.com
 A puppet recipe for Apache Maven, to download artifacts from a Maven repository
 
 It uses Apache Buildr library to download the artifacts.
+
+Usage
+
+maven(id, repository = "http://repo1.maven.org/maven2" )
+
+Examples
+
+file { "/tmp/maven-core-2.2.1.jar":
+  owner => root,
+  group => root,
+  mode => 644,
+  source => maven("org.apache.maven:maven-core:jar:2.2.1")
+}
+
+file { "/tmp/maven-core-2.2.1-sources.jar":
+  owner => root,
+  group => root,
+  mode => 644,
+  source => maven("org.apache.maven:maven-core:jar:sources:2.2.1", "http://www.ibiblio.org/maven2")
+}

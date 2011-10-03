@@ -17,7 +17,6 @@ require 'puppet/resource/catalog'
 require 'rubygems'
 require 'buildr'
 require 'fileutils'
-require 'pp'
 
 # Hack to make buildr think there is a rakefile in the directory
 class << Buildr.application
@@ -31,18 +30,16 @@ Puppet::Type.type(:maven).provide(:buildr) do
     # Remote repositories to use
     repos = @resource[:repos]
     if repos.nil? || repos.empty?
-      Buildr.repositories.remote << "http://repo1.maven.apache.org/maven2" if repos.nil? || repos.empty?
+      Buildr.repositories.remote << "http://repo1.maven.apache.org/maven2"
     else
       if repos.kind_of?(Array)
-        Buildr.repositories.remote = repos if repos.kind_of?(Array)
+        Buildr.repositories.remote = repos
       else
-        Buildr.repositories.remote << repos if !repos.kind_of?(Array)
+        Buildr.repositories.remote << repos
       end
     end
     debug "Repositories to use: #{Buildr.repositories.remote.join(', ')}"
     
-    # repos.
-
     full_id = @resource[:id]
     
     # Download the artifact fom the repo

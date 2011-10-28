@@ -19,45 +19,65 @@ http://www.maestrodev.com
 
 A puppet recipe for Apache Maven, to download artifacts from a Maven repository
 
-It uses Apache Buildr library to download the artifacts.
+It uses Apache Maven command line to download the artifacts.
 
-MAKE SURE YOU ENABLE PLUGINSYNC in both master and clients
+
+=== Buildr version ===
+
+There is also an Apache Buildr version, but it requires to have Buildr installed before running Puppet
+
+And you would need to enable pluginsync in both master and clients
 http://docs.puppetlabs.com/guides/plugins_in_modules.html#enabling-pluginsync
-
 
 Usage
 
-
-maven { file:
-  id => maven id,
-  repos => list of repositories, #optional
+maven { "/tmp/myfile":
+  id => "groupId:artifactId:version:packaging:classifier",
+  repos => ["id::layout::http://repo.acme.com","http://repo2.acme.com"],
 }
+
+or
+
+maven { "/tmp/myfile":
+  groupid => "org.apache.maven",
+  artifactid => "maven-core",
+  version => "2.2.1",
+  packaging => "jar",
+  classifier => "sources",
+  repos => ["id::layout::http://repo.acme.com","http://repo2.acme.com"],
+}
+
 
 Examples
 
 # =============== Begin setup ===============
 
-# Need to define java_home for Maven function
-$java_home = "/usr/lib/jvm/java-6-openjdk"
-
-# Install Java https://help.ubuntu.com/community/Java
-# Another option: sun-java6-jdk
-
-$jdk_package = "openjdk-6-jdk"
-$jdk_version = "installed"
-
-package { jdk:
-  ensure  => "$jdk_version",
-  name  => "$jdk_package",
+$repo1 = {
+  id => "myrepo",
+  username => "myuser",
+  password => "mypassword",
+  url => "http://repo.acme.com",
 }
 
-class { maven :
-  java_home => $java_home
+# Install Maven
+class { "maven::maven":
+  version => "2.2.1",
+} ->
+# Create a settings.xml with the repo creedentials
+class { "maven::settings" :
+  servers => [$repo1],
 }
 
 # =============== End setup ===============
 
+
 maven { "/tmp/maven-core-2.2.1.jar":
-  id => "org.apache.maven:maven-core:jar:2.2.1",
-  #repos => ["http://repo1.maven.apache.org/maven2","http://mirrors.ibiblio.org/pub/mirrors/maven2"],
+  id => "org.apache.maven:maven-core:2.2.1:jar",
+  repos => ["central::default::http://repo1.maven.apache.org/maven2","http://mirrors.ibiblio.org/pub/mirrors/maven2"],
+}
+maven { "/tmp/maven-core-2.2.1-sources.jar":
+  groupid => "org.apache.maven",
+  artifactid => "maven-core",
+  version => "2.2.1",
+  classifier => "sources",
 }

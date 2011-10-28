@@ -16,27 +16,26 @@
 #
 # A puppet recipe for Apache Maven, to download artifacts from a Maven repository
 #
-# It uses Apache Buildr library to download the artifacts.
+# It uses Apache Maven command line to download the artifacts.
 #
 # Parameters:
-#   - $java_home:
-#         JAVA_HOME environment variable.
+#   - $version:
+#         Maven version.
 #
 # Requires:
 #   Java package installed.
 #
 # Sample Usage:
 #   class {'maven':
-#     java_home => "/usr/local/java",
+#     version => "2.2.1",
 #   }
 
-class maven( $java_home ) {
+class maven() {
 
   notice("Installing Maven module pre-requisites")
 
-  # we use buildr to download artifacts
-  class { "maven::buildr" :
-    java_home => $maven::java_home
+  class { "maven::maven" :
+    version => "2.2.1",
   }
 
 }

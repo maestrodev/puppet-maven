@@ -22,8 +22,6 @@ Puppet::Type.type(:maven).provide(:mvn) do
 
   @@plugin_version = "2.4-SNAPSHOT"
 
-  commands :mvn => "mvn"
-
   def create
     # Remote repositories to use
     repos = @resource[:repos]

@@ -20,9 +20,9 @@ Puppet::Type.type(:maven).provide(:mvn) do
   desc "Maven download using mvn command line."
   include Puppet::Util::Execution
 
-  @@plugin_version = "2.4-SNAPSHOT"
-
   def create
+    plugin_version = @resource[:pluginversion].nil? ? "2.4-SNAPSHOT" : @resource[:pluginversion]
+
     # Remote repositories to use
     repos = @resource[:repos]
     if repos.nil? || repos.empty?
@@ -42,6 +42,7 @@ Puppet::Type.type(:maven).provide(:mvn) do
     version = @resource[:version]
     packaging = @resource[:packaging]
     classifier = @resource[:classifier]
+    options = @resource[:options]
 
     # Download the artifact fom the repo
     command_string = "-Dartifact=#{full_id}"
@@ -58,7 +59,7 @@ Puppet::Type.type(:maven).provide(:mvn) do
 
     debug "mvn downloading (if needed) repo file #{msg} to #{dest} from #{repos.join(', ')}"
 
-    command = ["mvn org.apache.maven.plugins:maven-dependency-plugin:#{@@plugin_version}:get #{command_string} -DremoteRepositories=#{repos.join(', ')} -Ddest=#{dest}"]
+    command = ["mvn org.apache.maven.plugins:maven-dependency-plugin:#{plugin_version}:get #{command_string} -DremoteRepositories=#{repos.join(', ')} -Ddest=#{dest} -Ppuppet-maven #{options}"]
 
     timeout = @resource[:timeout].nil? ? 0 : @resource[:timeout].to_i
     output = nil
@@ -75,8 +76,7 @@ Puppet::Type.type(:maven).provide(:mvn) do
     end
 
     unless status.exitstatus == 0
-      error output
-      self.fail("#{command} returned #{status.exitstatus}")
+      self.fail("#{command} returned #{status.exitstatus}: #{output}")
     end
   end
 

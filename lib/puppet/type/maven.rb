@@ -65,6 +65,12 @@ Puppet::Type.newtype(:maven) do
   newparam(:timeout) do
     desc "Download timeout."
   end
+  newparam(:pluginversion) do
+    desc "Version of the dependency plugin to use."
+  end
+  newparam(:options) do
+    desc "Other options to pass to mvn."
+  end
 
   validate do
     full_id = self[:id]

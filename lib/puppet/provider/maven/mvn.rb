@@ -49,7 +49,7 @@ Puppet::Type.type(:maven).provide(:mvn) do
     msg = full_id
     if (full_id.nil?)
       command_string = "-DgroupId=#{groupid} -DartifactId=#{artifactid} -Dversion=#{version} "
-      command_string = command_string + "-Dpackaging=#{packaging}" unless packaging.nil?
+      command_string = command_string + "-Dpackaging=#{packaging} " unless packaging.nil?
       command_string = command_string + "-Dclassifier=#{classifier}" unless classifier.nil?
       msg = "#{groupid}:#{artifactid}:#{version}:" + (packaging.nil? ? "" : packaging) + ":" + (classifier.nil? ? "" : classifier)
     end

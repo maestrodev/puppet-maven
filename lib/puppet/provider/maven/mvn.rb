@@ -21,7 +21,7 @@ Puppet::Type.type(:maven).provide(:mvn) do
   include Puppet::Util::Execution
 
   def create
-    plugin_version = @resource[:pluginversion].nil? ? "2.4-SNAPSHOT" : @resource[:pluginversion]
+    plugin_version = @resource[:pluginversion].nil? ? "2.4" : @resource[:pluginversion]
 
     # Remote repositories to use
     repos = @resource[:repos]

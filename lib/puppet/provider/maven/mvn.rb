@@ -75,6 +75,9 @@ Puppet::Type.type(:maven).provide(:mvn) do
       self.fail("Command timed out, increase timeout parameter if needed: #{command}")
     end
 
+    if (status.exitstatus == 1) && (output == '')
+      self.fail("mvn returned #{status.exitstatus}: Is Maven installed?")
+    end
     unless status.exitstatus == 0
       self.fail("#{command} returned #{status.exitstatus}: #{output}")
     end

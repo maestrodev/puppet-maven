@@ -16,13 +16,13 @@
 # 
 # A puppet recipe to set the contents of the settings.xml file
 #
-class maven::settings( $servers ) {
+class maven::settings( $home = "/root", $user = "root", $servers = [], $mirrors = [] ) {
 
-  file { "/root/.m2":
+  file { "${home}/.m2":
     ensure => directory,
   } ->
-  file { "/root/.m2/settings.xml":
-    owner => "root",
+  file { "${home}/.m2/settings.xml":
+    owner => $user,
     mode  => "0600",
     content => template("maven/settings.xml.erb"),
   }

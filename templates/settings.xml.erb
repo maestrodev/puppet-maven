@@ -11,24 +11,4 @@
     <% end -%>
   </servers>
 
-  <!-- required to use snapshot versions of the dependency plugin (for now) -->
-  <profiles>
-    <profile>
-      <id>puppet-maven</id>
-      <pluginRepositories>
-        <pluginRepository>
-          <releases>
-            <enabled>false</enabled>
-          </releases>
-          <snapshots>
-            <enabled>true</enabled>
-          </snapshots>
-          <id>apache.snapshots</id>
-          <name>Apache snapshots</name>
-          <url>https://repository.apache.org/content/repositories/snapshots</url>
-        </pluginRepository>
-      </pluginRepositories>
-    </profile>  
-  </profiles>
-
 </settings>

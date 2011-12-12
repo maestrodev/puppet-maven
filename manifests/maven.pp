@@ -24,9 +24,9 @@ class maven::maven( $version = "2.2.1",
   }, $user = "root", $home = "/root", $user_system = true,
   $maven_opts = "",
   $maven_path_aditions = "" ) {
-  
+
   $archive = "/tmp/apache-maven-${version}-bin.tar.gz"
-  
+
   if !defined(User[$user]) {
     user { $user:
       ensure     => present,
@@ -37,6 +37,7 @@ class maven::maven( $version = "2.2.1",
     }
   }
 
+  # we could use puppet-stdlib function !empty(repo) but avoiding adding a new dependency for now
   if "x${repo['url']}x" != "xx" {
     wget::authfetch { "fetch-maven":
       source => "${repo['url']}/org/apache/maven/apache-maven/$version/apache-maven-${version}-bin.tar.gz",

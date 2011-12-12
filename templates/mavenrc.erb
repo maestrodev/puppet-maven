@@ -1,0 +1,6 @@
+<% if has_variable?("maven_opts") %>
+export MAVEN_OPTS="$MAVEN_OPTS <%= maven_opts %>"
+<% end %>
+<% if has_variable?("maven_path_additions") %>
+export PATH="<%= maven_path_additions %>:$PATH"
+<% end %>

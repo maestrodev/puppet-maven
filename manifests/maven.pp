@@ -16,20 +16,55 @@
 # 
 # A puppet recipe to install Apache Maven
 #
-class maven::maven( $version = "2.2.1" ) {
+class maven::maven( $version = "2.2.1",
+  $repo = {
+    #url = "http://repo1.maven.org/maven2",
+    #username = "",
+    #password = "",
+  }, $user = "root", $user_home = "/root", $user_system = true,
+  $maven_opts = "" ) {
+  
+  $archive = "/tmp/apache-maven-${version}-bin.tar.gz"
+  
+  if !defined(User[$user]) {
+    user { "$user":
+      ensure     => present,
+      home       => "$user_home",
+      managehome => true,
+      shell      => "/bin/bash",
+      system     => $user_system,
+    }
+  }
 
-  wget::fetch { "fetch-maven":
-    source => "http://archive.apache.org/dist/maven/binaries/apache-maven-${version}-bin.tar.gz",
-    destination => "/tmp/apache-maven-${version}-bin.tar.gz",
-  } ->
+  if "x${repo['url']}x" != "xx" {
+    wget::authfetch { "fetch-maven":
+      source => "${repo['url']}/org/apache/maven/apache-maven/$version/apache-maven-${version}-bin.tar.gz",
+      destination => $archive,
+      user => $repo['username'],
+      password => $repo['password'],
+      notify => Exec["maven-untar"],
+    }
+  } else {
+    wget::fetch { "fetch-maven":
+      source => "http://archive.apache.org/dist/maven/binaries/apache-maven-${version}-bin.tar.gz",
+      destination => $archive,
+      notify => Exec["maven-untar"],
+    }
+  }
   exec { "maven-untar":
     command => "tar xf /tmp/apache-maven-${version}-bin.tar.gz",
     cwd => "/opt",
     creates => "/opt/apache-maven-${version}",
-    path => ["/bin"]
+    path => ["/bin"],
   } ->
   file { "/usr/bin/mvn":
     ensure => link,
     target => "/opt/apache-maven-${version}/bin/mvn",
+  }
+  file { "$user_home/.mavenrc":
+    mode => "0600",
+    owner => "$user",
+    content => template("maven/mavenrc.erb"),
+    require =>  User[$user],
   }
 }

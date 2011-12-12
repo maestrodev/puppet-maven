@@ -72,6 +72,13 @@ Puppet::Type.newtype(:maven) do
     desc "Other options to pass to mvn."
   end
 
+  newparam(:user) do
+    desc "User to run Maven as. Useful to share a local repo and settings.xml. Defaults to root."
+  end
+  newparam(:group) do
+    desc "Group to run Maven as. Defaults to root."
+  end
+
   validate do
     full_id = self[:id]
     groupid = self[:groupid]

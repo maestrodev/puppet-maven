@@ -43,6 +43,10 @@ Puppet::Type.type(:maven).provide(:mvn) do
     packaging = @resource[:packaging]
     classifier = @resource[:classifier]
     options = @resource[:options]
+    user = @resource[:user]
+    user = user.nil? || user.empty? ? "root" : user
+    group = @resource[:group]
+    group = group.nil? || group.empty? ? "root" : group
 
     # Download the artifact fom the repo
     command_string = "-Dartifact=#{full_id}"
@@ -67,7 +71,7 @@ Puppet::Type.type(:maven).provide(:mvn) do
 
     begin
       Timeout::timeout(timeout) do
-        output, status = Puppet::Util::SUIDManager.run_and_capture(command)
+        output, status = Puppet::Util::SUIDManager.run_and_capture(command, user, group)
         debug output if status.exitstatus == 0
         debug "Exit status = #{status.exitstatus}"
       end

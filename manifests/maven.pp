@@ -18,18 +18,18 @@
 #
 class maven::maven( $version = "2.2.1",
   $repo = {
-    #url = "http://repo1.maven.org/maven2",
-    #username = "",
-    #password = "",
+    #url => "http://repo1.maven.org/maven2",
+    #username => "",
+    #password => "",
   }, $user = "root", $home = "/root", $user_system = true,
   $maven_opts = "" ) {
   
   $archive = "/tmp/apache-maven-${version}-bin.tar.gz"
   
   if !defined(User[$user]) {
-    user { "$user":
+    user { $user:
       ensure     => present,
-      home       => "$home",
+      home       => $home,
       managehome => true,
       shell      => "/bin/bash",
       system     => $user_system,
@@ -42,13 +42,13 @@ class maven::maven( $version = "2.2.1",
       destination => $archive,
       user => $repo['username'],
       password => $repo['password'],
-      notify => Exec["maven-untar"],
+      before => Exec["maven-untar"],
     }
   } else {
     wget::fetch { "fetch-maven":
       source => "http://archive.apache.org/dist/maven/binaries/apache-maven-${version}-bin.tar.gz",
       destination => $archive,
-      notify => Exec["maven-untar"],
+      before => Exec["maven-untar"],
     }
   }
   exec { "maven-untar":
@@ -63,7 +63,7 @@ class maven::maven( $version = "2.2.1",
   }
   file { "$home/.mavenrc":
     mode => "0600",
-    owner => "$user",
+    owner => $user,
     content => template("maven/mavenrc.erb"),
     require =>  User[$user],
   }

@@ -21,7 +21,7 @@ class maven::maven( $version = "2.2.1",
     #url = "http://repo1.maven.org/maven2",
     #username = "",
     #password = "",
-  }, $user = "root", $user_home = "/root", $user_system = true,
+  }, $user = "root", $home = "/root", $user_system = true,
   $maven_opts = "" ) {
   
   $archive = "/tmp/apache-maven-${version}-bin.tar.gz"
@@ -29,7 +29,7 @@ class maven::maven( $version = "2.2.1",
   if !defined(User[$user]) {
     user { "$user":
       ensure     => present,
-      home       => "$user_home",
+      home       => "$home",
       managehome => true,
       shell      => "/bin/bash",
       system     => $user_system,
@@ -61,7 +61,7 @@ class maven::maven( $version = "2.2.1",
     ensure => link,
     target => "/opt/apache-maven-${version}/bin/mvn",
   }
-  file { "$user_home/.mavenrc":
+  file { "$home/.mavenrc":
     mode => "0600",
     owner => "$user",
     content => template("maven/mavenrc.erb"),

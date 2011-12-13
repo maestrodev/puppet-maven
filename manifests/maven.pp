@@ -63,6 +63,10 @@ class maven::maven( $version = "2.2.1",
     ensure => link,
     target => "/opt/apache-maven-${version}/bin/mvn",
   }
+  file { "/usr/local/bin/mvn":
+    ensure => absent,
+    require => Package["maven"],
+  }
   file { "$home/.mavenrc":
     mode => "0600",
     owner => $user,

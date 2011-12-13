@@ -65,7 +65,7 @@ class maven::maven( $version = "2.2.1",
   }
   file { "/usr/local/bin/mvn":
     ensure => absent,
-    require => Package["maven"],
+    require => Exec["maven-untar"],
   }
   file { "$home/.mavenrc":
     mode => "0600",

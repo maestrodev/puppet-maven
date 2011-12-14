@@ -12,10 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Class: maven
+# Class: maven::maven
 # 
 # A puppet recipe to install Apache Maven
 #
+# Parameters:
+#   - $version:
+#         Maven version.
+#
+# Requires:
+#   Java package installed.
+#
+# Sample Usage:
+#   class {'maven::maven':
+#     version => "2.2.1",
+#   }
 class maven::maven( $version = "2.2.1",
   $repo = {
     #url => "http://repo1.maven.org/maven2",

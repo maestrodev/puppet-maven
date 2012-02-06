@@ -13,36 +13,29 @@
 # limitations under the License.
 
 # Class: buildr
-# 
+#
 # A puppet recipe to install Apache Buildr
 #
+
+
 class maven::buildr( $java_home ) {
 
   # Can't use this as gem install buildr requires JAVA_HOME environment variable
   # package { "buildr":
-  #   ensure => "1.4.6",
+  #   ensure   => "1.4.6",
   #   provider => gem
   # }
 
   # a workaround using exec
-  define install-gem ($version = '') {
-    exec { "gem $name $version":
-      path => "/usr/bin:/opt/ruby/bin",
-      environment => "JAVA_HOME=$maven::java_home",
-      command => "gem install $name --version $version --no-rdoc --no-ri",
-      unless => "gem query -i --name-matches $name --version $version",
-      logoutput => true,
-    }
-  }
 
-  notice("Installing buildr")
+  notice('Installing buildr')
 
-  package { "rake":
-    ensure => "0.8.7",
+  package { 'rake':
+    ensure   => '0.8.7',
     provider => gem,
   }
-  install-gem { "buildr" :
-    version => "1.4.5",
-    require => Package["rake"],
+  maven::install-gem { 'buildr' :
+    version => '1.4.5',
+    require => Package['rake'],
   }
 }

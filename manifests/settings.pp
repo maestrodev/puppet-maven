@@ -20,6 +20,8 @@ class maven::settings( $home = "/root", $user = "root", $servers = [], $mirrors 
 
   file { "${home}/.m2":
     ensure => directory,
+    owner => $user,
+    mode  => "0700",    
   } ->
   file { "${home}/.m2/settings.xml":
     owner => $user,

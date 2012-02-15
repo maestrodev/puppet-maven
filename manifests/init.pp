@@ -14,7 +14,8 @@
 
 # Class: maven
 #
-# A puppet recipe for Apache Maven, to download artifacts from a Maven repository
+# A puppet recipe for Apache Maven, to download artifacts
+# from a Maven repository
 #
 # It uses Apache Maven command line to download the artifacts.
 #
@@ -30,12 +31,12 @@
 #     version => "2.2.1",
 #   }
 
-class maven() {
+class maven {
 
-  notice("Installing Maven module pre-requisites")
+  notice('Installing Maven module pre-requisites')
 
-  class { "maven::maven" :
-    version => "2.2.1",
+  class { 'maven::maven' :
+    version => '2.2.1',
   }
 
 }

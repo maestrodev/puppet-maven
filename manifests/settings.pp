@@ -13,10 +13,11 @@
 # limitations under the License.
 
 # Class: maven::settings
-# 
+#
 # A puppet recipe to set the contents of the settings.xml file
 #
-class maven::settings( $home = "/root", $user = "root", $servers = [], $mirrors = [] ) {
+class maven::settings( $home = '/root', $user = 'root',
+  $servers = [], $mirrors = [] ) {
 
   file { "${home}/.m2":
     ensure => directory,
@@ -24,9 +25,9 @@ class maven::settings( $home = "/root", $user = "root", $servers = [], $mirrors 
     mode  => "0700",    
   } ->
   file { "${home}/.m2/settings.xml":
-    owner => $user,
-    mode  => "0600",
-    content => template("maven/settings.xml.erb"),
+    owner   => $user,
+    mode    => '0600',
+    content => template('maven/settings.xml.erb'),
   }
 
 }

@@ -1,6 +1,8 @@
 require 'puppet-lint/tasks/puppet-lint'
 require 'rspec/core/rake_task'
 
+PuppetLint.configuration.send("disable_80chars")
+
 desc "Run module RSpec tests."
 RSpec::Core::RakeTask.new(:spec) do |t|
   t.rspec_opts = ["--format", "doc", "--color"]

@@ -1,5 +1,8 @@
+require 'rake/clean'
 require 'puppet-lint/tasks/puppet-lint'
 require 'rspec/core/rake_task'
+
+CLEAN.include('pkg')
 
 PuppetLint.configuration.send("disable_80chars")
 
@@ -10,6 +13,8 @@ RSpec::Core::RakeTask.new(:spec) do |t|
 end
 
 desc "Create a Puppet module."
-task :build do
+task :build => [:lint, :spec] do
   sh 'puppet-module build'
 end
+
+task :default => :build

@@ -8,7 +8,7 @@ $repo1 = {
 #class { 'maven::maven':
 #  version => '2.2.1',
 #} ->
-#class { 'maven::settings' :
+#maven::settings { 'root' :
 #  servers => [$repo1],
 #}
 

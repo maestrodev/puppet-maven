@@ -12,11 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Class: maven::settings
+# Define: maven::settings
 #
 # A puppet recipe to set the contents of the settings.xml file
 #
-class maven::settings( $home = '/root', $user = 'root',
+define maven::settings( $home = '/root', $user = 'root',
   $servers = [], $mirrors = [] ) {
 
   file { "${home}/.m2":

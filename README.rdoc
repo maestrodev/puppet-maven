@@ -73,7 +73,7 @@ or
   } ->
 
   # Create a settings.xml with the repo credentials
-  class { "maven::settings" :
+  maven::settings { 'root' :
     mirrors => [$repo1], # mirrors entry in settings.xml, uses id, url, mirrorof from the hash passed
     servers => [$repo1], # servers entry in settings.xml, uses id, username, password from the hash passed
   }

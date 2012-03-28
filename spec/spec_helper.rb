@@ -1,6 +1,8 @@
 require 'rspec-puppet'
 
+fixture_path = File.expand_path(File.join(File.dirname(__FILE__), 'fixtures'))
+
 RSpec.configure do |c|
-   c.module_path = File.expand_path(File.join(File.dirname(__FILE__), '..', '..'))
-   c.manifest_dir = File.expand_path(File.join(File.dirname(__FILE__), '..','spec','fixtures','manifests'))
+  c.module_path = File.join(fixture_path, 'modules')
+  c.manifest_dir = File.join(fixture_path, 'manifests')
 end

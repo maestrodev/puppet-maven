@@ -13,7 +13,7 @@ RSpec::Core::RakeTask.new(:spec) do |t|
 end
 
 desc "Create a Puppet module."
-task :build => [:lint, :spec] do
+task :build => [:clean, :lint, :spec] do
   sh 'puppet-module build'
 end
 

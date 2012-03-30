@@ -48,7 +48,7 @@ or
 
 == Setup
 
-  $repo1 = {
+  $central = {
     id => "myrepo",
     username => "myuser",
     password => "mypassword",
@@ -61,7 +61,7 @@ or
     version => "2.2.1", # version to install
     # you can get Maven tarball from a Maven repository instead than from Apache servers, optionally with a user/password
     repo => {
-      #url => "http://repo1.maven.org/maven2",
+      #url => "http://repo.maven.apache.org/maven2",
       #username => "",
       #password => "",
     },
@@ -74,22 +74,22 @@ or
 
   # Create a settings.xml with the repo credentials
   maven::settings { 'root' :
-    mirrors => [$repo1], # mirrors entry in settings.xml, uses id, url, mirrorof from the hash passed
-    servers => [$repo1], # servers entry in settings.xml, uses id, username, password from the hash passed
+    mirrors => [$central], # mirrors entry in settings.xml, uses id, url, mirrorof from the hash passed
+    servers => [$central], # servers entry in settings.xml, uses id, username, password from the hash passed
   }
 
   # defaults for all maven{} declarations
   Maven {
     user  => "maven", # you can make puppet run Maven as a specific user instead of root, useful to share Maven settings and local repository
     group => "maven", # you can make puppet run Maven as a specific group
-    repos => "http://repo1.maven.apache.org/maven2"
+    repos => "http://repo.maven.apache.org/maven2"
   }
 
 == Downloading artifacts
 
   maven { "/tmp/maven-core-2.2.1.jar":
     id => "org.apache.maven:maven-core:2.2.1:jar",
-    repos => ["central::default::http://repo1.maven.apache.org/maven2","http://mirrors.ibiblio.org/pub/mirrors/maven2"],
+    repos => ["central::default::http://repo.maven.apache.org/maven2","http://mirrors.ibiblio.org/pub/mirrors/maven2"],
   }
 
   maven { "/tmp/maven-core-2.2.1-sources.jar":

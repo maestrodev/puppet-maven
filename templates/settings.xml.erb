@@ -43,14 +43,14 @@
           <url><%= default_repo_config['url'] %></url>
           <%- unless default_repo_config['snapshots'].nil? or default_repo_config['snapshots'].empty? -%>
           <snapshots>
-            <%- default_repo_config['snapshots'].each { |key,value| -%>
+            <%- default_repo_config['snapshots'].sort.each { |key,value| -%>
             <%=  "<#{key}>#{value}</#{key}>" %>
             <%- } -%>
           </snapshots>
           <%- end -%>
           <%- unless default_repo_config['releases'].nil? or default_repo_config['releases'].empty? -%>
           <releases>
-            <%- default_repo_config['releases'].each { |key,value| -%>
+            <%- default_repo_config['releases'].sort.each { |key,value| -%>
             <%=  "<#{key}>#{value}</#{key}>" %>
             <%- } -%>
           </releases>
@@ -63,14 +63,14 @@
           <url><%= default_repo_config['url'] %></url>
           <%- unless default_repo_config['snapshots'].nil? or default_repo_config['snapshots'].empty? -%>
           <snapshots>
-            <%- default_repo_config['snapshots'].each { |key,value| -%>
+            <%- default_repo_config['snapshots'].sort.each { |key,value| -%>
             <%=  "<#{key}>#{value}</#{key}>" %>
             <%- } -%>
           </snapshots>
           <%- end -%>
           <%- unless default_repo_config['releases'].nil? or default_repo_config['releases'].empty? -%>
           <releases>
-            <%- default_repo_config['releases'].each { |key,value| -%>
+            <%- default_repo_config['releases'].sort.each { |key,value| -%>
             <%=  "<#{key}>#{value}</#{key}>" %>
             <%- } -%>
           </releases>
@@ -86,7 +86,7 @@
         <activeByDefault>true</activeByDefault>
       </activation>
       <properties>
-        <%- properties.each { |key, value| -%>
+        <%- properties.sort.each { |key, value| -%>
         <%=  "<#{key}>#{value}</#{key}>" %>
         <%- } -%>
       </properties>

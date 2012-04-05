@@ -35,8 +35,8 @@
           <id>central</id>
           <url>http://localhost:8082/archiva/repository/all/</url>
           <snapshots>
-            <enabled>true</enabled>
             <checksumPolicy>fail</checksumPolicy>
+            <enabled>true</enabled>
           </snapshots>
           <releases>
             <checksumPolicy>fail</checksumPolicy>
@@ -48,8 +48,8 @@
           <id>central</id>
           <url>http://localhost:8082/archiva/repository/all/</url>
           <snapshots>
-            <enabled>true</enabled>
             <checksumPolicy>fail</checksumPolicy>
+            <enabled>true</enabled>
           </snapshots>
           <releases>
             <checksumPolicy>fail</checksumPolicy>
@@ -63,12 +63,12 @@
         <activeByDefault>true</activeByDefault>
       </activation>
       <properties>
-        <sonar.jdbc.url>jdbc:postgresql://localhost:5432/sonar</sonar.jdbc.url>
-        <sonar.jdbc.driverClassName>org.postgresql.Driver</sonar.jdbc.driverClassName>
-        <sonar.jdbc.username>user</sonar.jdbc.username>
-        <sonar.jdbc.password>password</sonar.jdbc.password>
-        <sonar.host.url>http://localhost:8083/sonar</sonar.host.url>
         <selenium.host>localhost</selenium.host>
+        <sonar.host.url>http://localhost:8083/sonar</sonar.host.url>
+        <sonar.jdbc.driverClassName>org.postgresql.Driver</sonar.jdbc.driverClassName>
+        <sonar.jdbc.password>password</sonar.jdbc.password>
+        <sonar.jdbc.url>jdbc:postgresql://localhost:5432/sonar</sonar.jdbc.url>
+        <sonar.jdbc.username>user</sonar.jdbc.username>
       </properties>
     </profile>
   </profiles>

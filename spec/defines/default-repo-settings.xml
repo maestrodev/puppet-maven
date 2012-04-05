@@ -12,8 +12,8 @@
           <id>central</id>
           <url>http://localhost:8082/archiva/repository/all/</url>
           <snapshots>
-            <enabled>true</enabled>
             <checksumPolicy>fail</checksumPolicy>
+            <enabled>true</enabled>
           </snapshots>
           <releases>
             <checksumPolicy>fail</checksumPolicy>
@@ -25,8 +25,8 @@
           <id>central</id>
           <url>http://localhost:8082/archiva/repository/all/</url>
           <snapshots>
-            <enabled>true</enabled>
             <checksumPolicy>fail</checksumPolicy>
+            <enabled>true</enabled>
           </snapshots>
           <releases>
             <checksumPolicy>fail</checksumPolicy>

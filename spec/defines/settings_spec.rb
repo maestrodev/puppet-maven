@@ -49,127 +49,119 @@ describe "maven::settings" do
     content = catalogue.resource('file', expected_filename).send(:parameters)[:content]
     content.should == read_settings_file("default-settings.xml")
   end
-end
 
-describe "maven::settings" do
-  let(:title) { 'settings' }
-  let(:params) {
-    {
-        :user => "u",
-        :home => "/home/u",
-        :mirrors => [MIRROR],
-        :servers => [MIRROR_SERVER, DEPLOY_SERVER]
-    } }
+  context "with mirrors and settings" do
+    let(:params) {
+      {
+          :user => "u",
+          :home => "/home/u",
+          :mirrors => [MIRROR],
+          :servers => [MIRROR_SERVER, DEPLOY_SERVER]
+      } }
 
-  expected_filename = '/home/u/.m2/settings.xml'
-  it { should contain_file(expected_filename).with_owner('u') }
+    expected_filename = '/home/u/.m2/settings.xml'
+    it { should contain_file(expected_filename).with_owner('u') }
 
-  it 'should generate valid settings.xml when mirrors and servers are specified' do
-    content = catalogue.resource('file', expected_filename).send(:parameters)[:content]
-    content.should == read_settings_file("mirror-servers-settings.xml")
+    it 'should generate valid settings.xml when mirrors and servers are specified' do
+      content = catalogue.resource('file', expected_filename).send(:parameters)[:content]
+      content.should == read_settings_file("mirror-servers-settings.xml")
+    end
   end
 
-end
+  context "with default repository" do
+    let(:params) {
+      {
+          :user => "u",
+          :home => "/home/u",
+          :default_repo_config => DEFAULT_REPO_CONFIG,
+      } }
 
-describe "maven::settings" do
-  let(:title) { 'settings' }
-  let(:params) {
-    {
-        :user => "u",
-        :home => "/home/u",
-        :default_repo_config => DEFAULT_REPO_CONFIG,
-    } }
+    expected_filename = '/home/u/.m2/settings.xml'
+    it { should contain_file(expected_filename).with_owner('u') }
 
-  expected_filename = '/home/u/.m2/settings.xml'
-  it { should contain_file(expected_filename).with_owner('u') }
-
-  it 'should generate valid settings.xml when default repository configuration is specified' do
-    content = catalogue.resource('file', expected_filename).send(:parameters)[:content]
-    content.should == read_settings_file("default-repo-settings.xml")
+    it 'should generate valid settings.xml when default repository configuration is specified' do
+      content = catalogue.resource('file', expected_filename).send(:parameters)[:content]
+      content.should == read_settings_file("default-repo-settings.xml")
+    end
   end
 
-end
+  context "with default repository configuration url only" do
+    let(:params) {
+      {
+          :user => "u",
+          :home => "/home/u",
+          :default_repo_config => {
+              'url' => DEFAULT_REPO_CONFIG['url'],
+          },
+      } }
 
-describe "maven::settings" do
-  let(:title) { 'settings' }
-  let(:params) {
-    {
-        :user => "u",
-        :home => "/home/u",
-        :default_repo_config => {
-            'url' => DEFAULT_REPO_CONFIG['url'],
-        },
-    } }
+    expected_filename = '/home/u/.m2/settings.xml'
+    it { should contain_file(expected_filename).with_owner('u') }
 
-  expected_filename = '/home/u/.m2/settings.xml'
-  it { should contain_file(expected_filename).with_owner('u') }
+    it 'should generate valid settings.xml when default repository configuration is specified with only an url' do
+      content = catalogue.resource('file', expected_filename).send(:parameters)[:content]
+      content.should == read_settings_file("default-repo-only-url-settings.xml")
+    end
 
-  it 'should generate valid settings.xml when default repository configuration is specified with only an url' do
-    content = catalogue.resource('file', expected_filename).send(:parameters)[:content]
-    content.should == read_settings_file("default-repo-only-url-settings.xml")
   end
 
-end
+  context "with properties" do
+    let(:params) {
+      {
+          :user => "u",
+          :home => "/home/u",
+          :properties => PROPERTIES,
+      } }
 
-describe "maven::settings" do
-  let(:title) { 'settings' }
-  let(:params) {
-    {
-        :user => "u",
-        :home => "/home/u",
-        :properties => PROPERTIES,
-    } }
+    expected_filename = '/home/u/.m2/settings.xml'
+    it { should contain_file(expected_filename).with_owner('u') }
 
-  expected_filename = '/home/u/.m2/settings.xml'
-  it { should contain_file(expected_filename).with_owner('u') }
+    it 'should generate valid settings.xml when properties are specified' do
+      content = catalogue.resource('file', expected_filename).send(:parameters)[:content]
+      content.should == read_settings_file("properties-settings.xml")
+    end
 
-  it 'should generate valid settings.xml when properties are specified' do
-    content = catalogue.resource('file', expected_filename).send(:parameters)[:content]
-    content.should == read_settings_file("properties-settings.xml")
   end
 
-end
+  context "with local repository" do
+    let(:params) {
+      {
+          :user => "u",
+          :home => "/home/u",
+          :local_repo => "/var/cache/maven/repository",
+      } }
 
-describe "maven::settings" do
-  let(:title) { 'settings' }
-  let(:params) {
-    {
-        :user => "u",
-        :home => "/home/u",
-        :local_repo => "/var/cache/maven/repository",
-    } }
+    expected_filename = '/home/u/.m2/settings.xml'
+    it { should contain_file(expected_filename).with_owner('u') }
 
-  expected_filename = '/home/u/.m2/settings.xml'
-  it { should contain_file(expected_filename).with_owner('u') }
+    it 'should generate valid settings.xml when local repository configuration is specified' do
+      content = catalogue.resource('file', expected_filename).send(:parameters)[:content]
+      content.should == read_settings_file("local-repo-settings.xml")
+    end
 
-  it 'should generate valid settings.xml when local repository configuration is specified' do
-    content = catalogue.resource('file', expected_filename).send(:parameters)[:content]
-    content.should == read_settings_file("local-repo-settings.xml")
   end
 
-end
+  context "with the lot" do
+    let(:params) {
+      {
+          :user => "u",
+          :home => "/home/u",
+          :mirrors => [MIRROR],
+          :servers => [MIRROR_SERVER, DEPLOY_SERVER],
+          :default_repo_config => DEFAULT_REPO_CONFIG,
+          :properties => PROPERTIES,
+          :local_repo => "/var/cache/maven/repository",
+      } }
 
-describe "maven::settings" do
-  let(:title) { 'settings' }
-  let(:params) {
-    {
-        :user => "u",
-        :home => "/home/u",
-        :mirrors => [MIRROR],
-        :servers => [MIRROR_SERVER, DEPLOY_SERVER],
-        :default_repo_config => DEFAULT_REPO_CONFIG,
-        :properties => PROPERTIES,
-        :local_repo => "/var/cache/maven/repository",
-    } }
+    expected_filename = '/home/u/.m2/settings.xml'
+    it { should contain_file(expected_filename).with_owner('u') }
 
-  expected_filename = '/home/u/.m2/settings.xml'
-  it { should contain_file(expected_filename).with_owner('u') }
+    it 'should generate valid settings.xml with everything specified' do
+      content = catalogue.resource('file', expected_filename).send(:parameters)[:content]
+      content.should == read_settings_file("complete-settings.xml")
+    end
 
-  it 'should generate valid settings.xml with everything specified' do
-    content = catalogue.resource('file', expected_filename).send(:parameters)[:content]
-    content.should == read_settings_file("complete-settings.xml")
   end
-
 end
 
 def read_settings_file(filename)

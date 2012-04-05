@@ -30,18 +30,21 @@
     <%- unless default_repo_config.empty? -%>
     <profile>
       <id>default-repo</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
       <repositories>
         <repository>
           <id>central</id>
           <url><%= default_repo_config['url'] %></url>
-          <%- unless default_repo_config['snapshots'].empty? -%>
+          <%- unless default_repo_config['snapshots'].nil? or default_repo_config['snapshots'].empty? -%>
           <snapshots>
             <%- default_repo_config['snapshots'].each { |key,value| -%>
             <%=  "<#{key}>#{value}</#{key}>" %>
             <%- } -%>
           </snapshots>
           <%- end -%>
-          <%- unless default_repo_config['releases'].empty? -%>
+          <%- unless default_repo_config['releases'].nil? or default_repo_config['releases'].empty? -%>
           <releases>
             <%- default_repo_config['releases'].each { |key,value| -%>
             <%=  "<#{key}>#{value}</#{key}>" %>
@@ -54,14 +57,14 @@
         <pluginRepository>
           <id>central</id>
           <url><%= default_repo_config['url'] %></url>
-          <%- unless default_repo_config['snapshots'].empty? -%>
+          <%- unless default_repo_config['snapshots'].nil? or default_repo_config['snapshots'].empty? -%>
           <snapshots>
             <%- default_repo_config['snapshots'].each { |key,value| -%>
             <%=  "<#{key}>#{value}</#{key}>" %>
             <%- } -%>
           </snapshots>
           <%- end -%>
-          <%- unless default_repo_config['releases'].empty? -%>
+          <%- unless default_repo_config['releases'].nil? or default_repo_config['releases'].empty? -%>
           <releases>
             <%- default_repo_config['releases'].each { |key,value| -%>
             <%=  "<#{key}>#{value}</#{key}>" %>

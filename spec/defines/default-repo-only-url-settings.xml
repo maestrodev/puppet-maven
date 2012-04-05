@@ -11,26 +11,12 @@
         <repository>
           <id>central</id>
           <url>http://localhost:8082/archiva/repository/all/</url>
-          <snapshots>
-            <enabled>true</enabled>
-            <checksumPolicy>fail</checksumPolicy>
-          </snapshots>
-          <releases>
-            <checksumPolicy>fail</checksumPolicy>
-          </releases>
         </repository>
       </repositories>
       <pluginRepositories>
         <pluginRepository>
           <id>central</id>
           <url>http://localhost:8082/archiva/repository/all/</url>
-          <snapshots>
-            <enabled>true</enabled>
-            <checksumPolicy>fail</checksumPolicy>
-          </snapshots>
-          <releases>
-            <checksumPolicy>fail</checksumPolicy>
-          </releases>
         </pluginRepository>
       </pluginRepositories>
     </profile>

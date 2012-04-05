@@ -25,6 +25,9 @@
   <profiles>
     <profile>
       <id>default-repo</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
       <repositories>
         <repository>
           <id>central</id>

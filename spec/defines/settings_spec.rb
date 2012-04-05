@@ -96,6 +96,27 @@ describe "maven::settings" do
     {
         :user => "u",
         :home => "/home/u",
+        :default_repo_config => {
+            'url' => DEFAULT_REPO_CONFIG['url'],
+        },
+    } }
+
+  expected_filename = '/home/u/.m2/settings.xml'
+  it { should contain_file(expected_filename).with_owner('u') }
+
+  it 'should generate valid settings.xml when default repository configuration is specified with only an url' do
+    content = catalogue.resource('file', expected_filename).send(:parameters)[:content]
+    content.should == read_settings_file("default-repo-only-url-settings.xml")
+  end
+
+end
+
+describe "maven::settings" do
+  let(:title) { 'settings' }
+  let(:params) {
+    {
+        :user => "u",
+        :home => "/home/u",
         :properties => PROPERTIES,
     } }
 

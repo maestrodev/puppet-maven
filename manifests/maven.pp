@@ -34,7 +34,8 @@ class maven::maven( $version = '2.2.1',
     #password => '',
   }, $user = 'root', $home = '/root', $user_system = true,
   $maven_opts = '',
-  $maven_path_additions = '' ) {
+  $maven_path_additions = '',
+  $mavenrc_additions = '') {
 
   $archive = "/tmp/apache-maven-${version}-bin.tar.gz"
 

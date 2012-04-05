@@ -124,7 +124,7 @@ describe "maven::settings" do
   expected_filename = '/home/u/.m2/settings.xml'
   it { should contain_file(expected_filename).with_owner('u') }
 
-  it 'should generate valid settings.xml wth everything specified' do
+  it 'should generate valid settings.xml with everything specified' do
     content = catalogue.resource('file', expected_filename).send(:parameters)[:content]
     content.should == read_settings_file("complete-settings.xml")
   end

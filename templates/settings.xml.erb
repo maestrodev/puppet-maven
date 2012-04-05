@@ -1,16 +1,19 @@
-<settings xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
 
+<% unless mirrors.empty? -%>
   <mirrors>
 <% mirrors.each do |mirror| -%>
     <mirror>
-      <mirrorOf><%= mirror['mirrorof'] %></mirrorOf>
       <id><%= mirror['id'] %></id>
       <url><%= mirror['url'] %></url>
+      <mirrorOf><%= mirror['mirrorof'] %></mirrorOf>
     </mirror>
 <% end -%>
   </mirrors>
 
+<% end -%>
+<% unless servers.empty? -%>
   <servers>
 <% servers.each do |server| -%>
     <server>
@@ -21,4 +24,5 @@
 <% end -%>
   </servers>
 
+<% end -%>
 </settings>

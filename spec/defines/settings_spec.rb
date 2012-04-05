@@ -136,10 +136,30 @@ describe "maven::settings" do
     {
         :user => "u",
         :home => "/home/u",
+        :local_repo => "/var/cache/maven/repository",
+    } }
+
+  expected_filename = '/home/u/.m2/settings.xml'
+  it { should contain_file(expected_filename).with_owner('u') }
+
+  it 'should generate valid settings.xml when local repository configuration is specified' do
+    content = catalogue.resource('file', expected_filename).send(:parameters)[:content]
+    content.should == read_settings_file("local-repo-settings.xml")
+  end
+
+end
+
+describe "maven::settings" do
+  let(:title) { 'settings' }
+  let(:params) {
+    {
+        :user => "u",
+        :home => "/home/u",
         :mirrors => [MIRROR],
         :servers => [MIRROR_SERVER, DEPLOY_SERVER],
         :default_repo_config => DEFAULT_REPO_CONFIG,
         :properties => PROPERTIES,
+        :local_repo => "/var/cache/maven/repository",
     } }
 
   expected_filename = '/home/u/.m2/settings.xml'

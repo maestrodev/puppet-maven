@@ -25,4 +25,52 @@
   </servers>
 
 <% end -%>
+<% unless default_repo_config.empty? -%>
+  <profiles>
+    <profile>
+      <id>default-repo</id>
+      <repositories>
+        <repository>
+          <id>central</id>
+          <url><%= default_repo_config['url'] %></url>
+          <%- unless default_repo_config['snapshots'].empty? -%>
+          <snapshots>
+            <%- default_repo_config['snapshots'].each { |key,value| -%>
+            <%=  "<#{key}>#{value}</#{key}>" %>
+            <%- } -%>
+          </snapshots>
+          <%- end -%>
+          <%- unless default_repo_config['releases'].empty? -%>
+          <releases>
+            <%- default_repo_config['releases'].each { |key,value| -%>
+            <%=  "<#{key}>#{value}</#{key}>" %>
+            <%- } -%>
+          </releases>
+          <%- end -%>
+        </repository>
+      </repositories>
+      <pluginRepositories>
+        <pluginRepository>
+          <id>central</id>
+          <url><%= default_repo_config['url'] %></url>
+          <%- unless default_repo_config['snapshots'].empty? -%>
+          <snapshots>
+            <%- default_repo_config['snapshots'].each { |key,value| -%>
+            <%=  "<#{key}>#{value}</#{key}>" %>
+            <%- } -%>
+          </snapshots>
+          <%- end -%>
+          <%- unless default_repo_config['releases'].empty? -%>
+          <releases>
+            <%- default_repo_config['releases'].each { |key,value| -%>
+            <%=  "<#{key}>#{value}</#{key}>" %>
+            <%- } -%>
+          </releases>
+          <%- end -%>
+        </pluginRepository>
+      </pluginRepositories>
+    </profile>
+  </profiles>
+
+<% end -%>
 </settings>

@@ -17,7 +17,7 @@
 # A puppet recipe to set the contents of the settings.xml file
 #
 define maven::settings( $home = '/root', $user = 'root',
-  $servers = [], $mirrors = [] ) {
+  $servers = [], $mirrors = [], $default_repo_config = {} ) {
 
   file { "${home}/.m2":
     ensure => directory,

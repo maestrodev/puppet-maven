@@ -4,7 +4,7 @@
   <mirrors>
     <mirror>
       <id>maestro-mirror</id>
-      <url>https://localhost:8082/archiva/repository/all/</url>
+      <url>http://localhost:8082/archiva/repository/all/</url>
       <mirrorOf>external:*</mirrorOf>
     </mirror>
   </mirrors>

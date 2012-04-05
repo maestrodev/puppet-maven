@@ -1,0 +1,71 @@
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+
+  <mirrors>
+    <mirror>
+      <id>maestro-mirror</id>
+      <url>http://localhost:8082/archiva/repository/all/</url>
+      <mirrorOf>external:*</mirrorOf>
+    </mirror>
+  </mirrors>
+
+  <servers>
+    <server>
+      <id>maestro-mirror</id>
+      <username>mirror_user</username>
+      <password>mirror_pass</password>
+    </server>
+    <server>
+      <id>maestro-deploy</id>
+      <username>deploy_user</username>
+      <password>deploy_pass</password>
+    </server>
+  </servers>
+
+  <profiles>
+    <profile>
+      <id>default-repo</id>
+      <repositories>
+        <repository>
+          <id>central</id>
+          <url>http://localhost:8082/archiva/repository/all/</url>
+          <snapshots>
+            <enabled>true</enabled>
+            <checksumPolicy>fail</checksumPolicy>
+          </snapshots>
+          <releases>
+            <checksumPolicy>fail</checksumPolicy>
+          </releases>
+        </repository>
+      </repositories>
+      <pluginRepositories>
+        <pluginRepository>
+          <id>central</id>
+          <url>http://localhost:8082/archiva/repository/all/</url>
+          <snapshots>
+            <enabled>true</enabled>
+            <checksumPolicy>fail</checksumPolicy>
+          </snapshots>
+          <releases>
+            <checksumPolicy>fail</checksumPolicy>
+          </releases>
+        </pluginRepository>
+      </pluginRepositories>
+    </profile>
+    <profile>
+      <id>properties</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <properties>
+        <sonar.jdbc.url>jdbc:postgresql://localhost:5432/sonar</sonar.jdbc.url>
+        <sonar.jdbc.driverClassName>org.postgresql.Driver</sonar.jdbc.driverClassName>
+        <sonar.jdbc.username>user</sonar.jdbc.username>
+        <sonar.jdbc.password>password</sonar.jdbc.password>
+        <sonar.host.url>http://localhost:8083/sonar</sonar.host.url>
+        <selenium.host>localhost</selenium.host>
+      </properties>
+    </profile>
+  </profiles>
+
+</settings>

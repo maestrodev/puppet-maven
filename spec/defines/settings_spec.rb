@@ -26,6 +26,14 @@ DEFAULT_REPO_CONFIG = {
         'checksumPolicy' => 'fail',
     }
 }
+PROPERTIES = {
+    'sonar.jdbc.url' => 'jdbc:postgresql://localhost:5432/sonar',
+    'sonar.jdbc.driverClassName' => 'org.postgresql.Driver',
+    'sonar.jdbc.username' => 'user',
+    'sonar.jdbc.password' => 'password',
+    'sonar.host.url' => 'http://localhost:8083/sonar',
+    'selenium.host' => 'localhost',
+}
 
 describe "maven::settings" do
   let(:title) { 'settings' }
@@ -78,6 +86,47 @@ describe "maven::settings" do
   it 'should generate valid settings.xml when default repository configuration is specified' do
     content = catalogue.resource('file', expected_filename).send(:parameters)[:content]
     content.should == read_settings_file("default-repo-settings.xml")
+  end
+
+end
+
+describe "maven::settings" do
+  let(:title) { 'settings' }
+  let(:params) {
+    {
+        :user => "u",
+        :home => "/home/u",
+        :properties => PROPERTIES,
+    } }
+
+  expected_filename = '/home/u/.m2/settings.xml'
+  it { should contain_file(expected_filename).with_owner('u') }
+
+  it 'should generate valid settings.xml when properties are specified' do
+    content = catalogue.resource('file', expected_filename).send(:parameters)[:content]
+    content.should == read_settings_file("properties-settings.xml")
+  end
+
+end
+
+describe "maven::settings" do
+  let(:title) { 'settings' }
+  let(:params) {
+    {
+        :user => "u",
+        :home => "/home/u",
+        :mirrors => [MIRROR],
+        :servers => [MIRROR_SERVER, DEPLOY_SERVER],
+        :default_repo_config => DEFAULT_REPO_CONFIG,
+        :properties => PROPERTIES,
+    } }
+
+  expected_filename = '/home/u/.m2/settings.xml'
+  it { should contain_file(expected_filename).with_owner('u') }
+
+  it 'should generate valid settings.xml wth everything specified' do
+    content = catalogue.resource('file', expected_filename).send(:parameters)[:content]
+    content.should == read_settings_file("complete-settings.xml")
   end
 
 end

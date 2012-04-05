@@ -25,8 +25,9 @@
   </servers>
 
 <% end -%>
-<% unless default_repo_config.empty? -%>
+<% unless default_repo_config.empty? and properties.empty? -%>
   <profiles>
+    <%- unless default_repo_config.empty? -%>
     <profile>
       <id>default-repo</id>
       <repositories>
@@ -70,6 +71,20 @@
         </pluginRepository>
       </pluginRepositories>
     </profile>
+    <%- end -%>
+    <%- unless properties.empty? -%>
+    <profile>
+      <id>properties</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <properties>
+        <%- properties.each { |key, value| -%>
+        <%=  "<#{key}>#{value}</#{key}>" %>
+        <%- } -%>
+      </properties>
+    </profile>
+    <%- end -%>
   </profiles>
 
 <% end -%>

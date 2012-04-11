@@ -1,0 +1,3 @@
+export MAVEN_OPTS="$MAVEN_OPTS -Xmx256m"
+export PATH="/usr/local/bin:$PATH"
+echo Hello World!

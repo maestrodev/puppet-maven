@@ -1,4 +1,4 @@
-require "spec_helper"
+require "#{File.join(File.dirname(__FILE__),'..','spec_helper')}"
 
 URL = 'http://localhost:8082/archiva/repository/all/'
 MIRROR = {
@@ -47,7 +47,7 @@ describe "maven::settings" do
 
   it 'should generate valid settings.xml' do
     content = catalogue.resource('file', expected_filename).send(:parameters)[:content]
-    content.should == read_settings_file("default-settings.xml")
+    content.should == read_file("default-settings.xml")
   end
 
   context "with mirrors and settings" do
@@ -64,7 +64,7 @@ describe "maven::settings" do
 
     it 'should generate valid settings.xml when mirrors and servers are specified' do
       content = catalogue.resource('file', expected_filename).send(:parameters)[:content]
-      content.should == read_settings_file("mirror-servers-settings.xml")
+      content.should == read_file("mirror-servers-settings.xml")
     end
   end
 
@@ -81,7 +81,7 @@ describe "maven::settings" do
 
     it 'should generate valid settings.xml when default repository configuration is specified' do
       content = catalogue.resource('file', expected_filename).send(:parameters)[:content]
-      content.should == read_settings_file("default-repo-settings.xml")
+      content.should == read_file("default-repo-settings.xml")
     end
   end
 
@@ -100,7 +100,7 @@ describe "maven::settings" do
 
     it 'should generate valid settings.xml when default repository configuration is specified with only an url' do
       content = catalogue.resource('file', expected_filename).send(:parameters)[:content]
-      content.should == read_settings_file("default-repo-only-url-settings.xml")
+      content.should == read_file("default-repo-only-url-settings.xml")
     end
 
   end
@@ -118,7 +118,7 @@ describe "maven::settings" do
 
     it 'should generate valid settings.xml when properties are specified' do
       content = catalogue.resource('file', expected_filename).send(:parameters)[:content]
-      content.should == read_settings_file("properties-settings.xml")
+      content.should == read_file("properties-settings.xml")
     end
 
   end
@@ -136,7 +136,7 @@ describe "maven::settings" do
 
     it 'should generate valid settings.xml when local repository configuration is specified' do
       content = catalogue.resource('file', expected_filename).send(:parameters)[:content]
-      content.should == read_settings_file("local-repo-settings.xml")
+      content.should == read_file("local-repo-settings.xml")
     end
 
   end
@@ -158,13 +158,13 @@ describe "maven::settings" do
 
     it 'should generate valid settings.xml with everything specified' do
       content = catalogue.resource('file', expected_filename).send(:parameters)[:content]
-      content.should == read_settings_file("complete-settings.xml")
+      content.should == read_file("complete-settings.xml")
     end
 
   end
 end
 
-def read_settings_file(filename)
+def read_file(filename)
   IO.read(File.expand_path(filename, File.dirname(__FILE__)))
 end
 

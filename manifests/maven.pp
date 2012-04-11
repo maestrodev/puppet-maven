@@ -32,22 +32,9 @@ class maven::maven( $version = '2.2.1',
     #url      => 'http://repo1.maven.org/maven2',
     #username => '',
     #password => '',
-  }, $user = 'root', $home = '/root', $user_system = true,
-  $maven_opts = '',
-  $maven_path_additions = '',
-  $mavenrc_additions = '') {
+  } ) {
 
   $archive = "/tmp/apache-maven-${version}-bin.tar.gz"
-
-  if !defined(User[$user]) {
-    user { $user:
-      ensure     => present,
-      home       => $home,
-      managehome => true,
-      shell      => '/bin/bash',
-      system     => $user_system,
-    }
-  }
 
   # we could use puppet-stdlib function !empty(repo) but avoiding adding a new dependency for now
   if "x${repo['url']}x" != 'xx' {
@@ -78,11 +65,5 @@ class maven::maven( $version = '2.2.1',
   file { '/usr/local/bin/mvn':
     ensure  => absent,
     require => Exec['maven-untar'],
-  }
-  file { "$home/.mavenrc":
-    mode    => '0600',
-    owner   => $user,
-    content => template('maven/mavenrc.erb'),
-    require =>  User[$user],
   }
 }

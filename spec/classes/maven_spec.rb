@@ -2,15 +2,6 @@ require "#{File.join(File.dirname(__FILE__),'..','spec_helper')}"
 
 describe 'maven::maven' do
   let(:title) { 'maven' }
-  let(:params) { { :user => 'myuser' } }
-
-  context "when user does not exist" do
-    it { should contain_user('myuser') }
-  end
-
-  context "when running as root" do
-    it { should contain_file('/root/.mavenrc') }
-  end
 
   context "when downloading maven" do
     it do should contain_wget__fetch('fetch-maven').with(
@@ -21,7 +12,7 @@ describe 'maven::maven' do
   end
 
   context "when downloading maven from another repo" do
-    let(:params) { { :user => 'myuser', :repo => {
+    let(:params) { { :repo => {
         'url'      => 'http://repo1.maven.org/maven2',
         'username' => 'u',
         'password' => 'p'

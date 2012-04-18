@@ -5,8 +5,10 @@ A Puppet recipe for Apache Maven, to download artifacts from a Maven repository
 
 Uses [Apache Maven](http://maven.apache.org) command line to download the artifacts.
 
-Build/Install Process
----------------------
+Building and Installing the Module
+----------------------------------
+
+To build the module for installing in your Puppet master:
 
 ```sh
 gem install puppet-module
@@ -16,7 +18,17 @@ puppet module build
 puppet module install pkg/maestrodev-maven-0.0.1.tar.gz
 ```
 
-Copy the module to your modules folder
+Of course, you can also clone the repository straight into `/etc/puppet/modules/maven` as well.
+
+If you are developing the module, it can be built using `rake`:
+
+```sh
+gem install bundler
+bundle
+rake
+```
+
+In this case other required gems are automatically installed, and the package resides in the same location for publishing to your Puppet master.
 
 Usage
 -----

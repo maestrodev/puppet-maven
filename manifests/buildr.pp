@@ -16,8 +16,7 @@
 #
 # A puppet recipe to install Apache Buildr
 #
-
-
+#
 class maven::buildr( $java_home ) {
 
   # Can't use this as gem install buildr requires JAVA_HOME environment variable

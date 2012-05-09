@@ -1,2 +1,2 @@
-define wget::authfetch($source,$destination,$user,$password="",$timeout="0") {
+define wget::authfetch($source,$destination,$user,$password='',$timeout='0') {
 }

@@ -30,7 +30,7 @@
 #   class {'maven':
 #     version => "2.2.1",
 #   }
-
+#
 class maven {
 
   notice('Installing Maven module pre-requisites')

@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Define: maven::settings
+# Define: maven::environment
 #
-# A puppet recipe to set the contents of the settings.xml file
+# A puppet recipe to set the contents of the .mavenrc file
 #
 define maven::environment( $user, $home = undef, $maven_opts = '', $maven_path_additions = '', $mavenrc_additions = '' ) {
 

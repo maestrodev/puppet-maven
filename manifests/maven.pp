@@ -58,7 +58,7 @@ class maven::maven( $version = '2.2.1',
     command => "tar xf /tmp/apache-maven-${version}-bin.tar.gz",
     cwd     => '/opt',
     creates => "/opt/apache-maven-${version}",
-    path    => ['/bin'],
+    path    => ['/bin','/usr/bin'],
   } ->
   file { '/usr/bin/mvn':
     ensure => link,

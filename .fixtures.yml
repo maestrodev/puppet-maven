@@ -1,5 +1,5 @@
 fixtures:
   repositories:
-    wget: git://github.com/maestrodev/puppet-wget.git
+    wget: http://github.com/maestrodev/puppet-wget.git
   symlinks:
     maven: "#{source_dir}"

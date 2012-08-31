@@ -5,5 +5,5 @@ group :rake do
   gem 'rspec-puppet', '>=0.1.3'
   gem 'rake',         '>=0.9.2.2'
   gem 'puppet-lint',  '~>0.1.12'
-  gem 'puppetlabs_spec_helper'
+  gem 'puppetlabs_spec_helper', '~>0.3.0'
 end

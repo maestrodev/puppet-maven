@@ -76,17 +76,17 @@ Examples
       #username => "",
       #password => "",
     },
-    user                 => "root",  # if you want to run it as a different user (defaults to root), will create it if not defined
-    home                 => "/root", # home directory of the user
+    user                 => "maven",  # if you want to run it as a different user (defaults to root), will create it if not defined
     user_system          => true,    # make the user a system user
     maven_opts           => "",      # anything to add to MAVEN_OPTS in ~/.mavenrc
     maven_path_additions => "",      # anything to add to the PATH in ~/.mavenrc
   } ->
 
   # Create a settings.xml with the repo credentials
-  maven::settings { 'root' :
+  maven::settings { 'maven-user-settings' :
     mirrors => [$central], # mirrors entry in settings.xml, uses id, url, mirrorof from the hash passed
     servers => [$central], # servers entry in settings.xml, uses id, username, password from the hash passed
+    user    => 'maven',
   }
 
   # defaults for all maven{} declarations

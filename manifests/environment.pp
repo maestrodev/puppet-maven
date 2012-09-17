@@ -19,7 +19,10 @@
 define maven::environment( $user, $home = undef, $maven_opts = '', $maven_path_additions = '', $mavenrc_additions = '' ) {
 
   if $home == undef {
-    $home_real = "/home/$user"
+    $home_real = $user ? {
+      'root'  => '/root',
+      default => "/home/${user}"
+    }
   }
   else {
     $home_real = $home

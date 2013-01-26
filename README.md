@@ -15,7 +15,7 @@ gem install puppet-module
 git clone git://github.com/maestrodev/puppet-maven.git
 cd puppet-maven
 puppet module build
-puppet module install pkg/maestrodev-maven-0.0.1.tar.gz
+puppet module install pkg/maestrodev-maven-1.0.0.tar.gz
 ```
 
 Of course, you can also clone the repository straight into `/etc/puppet/modules/maven` as well.

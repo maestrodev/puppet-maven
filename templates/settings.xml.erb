@@ -5,18 +5,6 @@
   <localRepository><%= local_repo %></localRepository>
 
 <%- end -%>
-<% unless mirrors.empty? -%>
-  <mirrors>
-<% mirrors.each do |mirror| -%>
-    <mirror>
-      <id><%= mirror['id'] %></id>
-      <url><%= mirror['url'] %></url>
-      <mirrorOf><%= mirror['mirrorof'] %></mirrorOf>
-    </mirror>
-<% end -%>
-  </mirrors>
-
-<% end -%>
 <% unless servers.empty? -%>
   <servers>
 <% servers.each do |server| -%>
@@ -27,8 +15,20 @@
     </server>
 <% end -%>
   </servers>
-
 <% end -%>
+
+<% unless mirrors.empty? -%>
+  <mirrors>
+<% mirrors.each do |mirror| -%>
+    <mirror>
+      <id><%= mirror['id'] %></id>
+      <url><%= mirror['url'] %></url>
+      <mirrorOf><%= mirror['mirrorof'] %></mirrorOf>
+    </mirror>
+<% end -%>
+  </mirrors>
+<% end -%>
+
 <% unless default_repo_config.empty? and properties.empty? -%>
   <profiles>
     <%- unless default_repo_config.empty? -%>

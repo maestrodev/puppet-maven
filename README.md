@@ -53,6 +53,19 @@ or
   }
 ```
 
+### MAVEN_OPTS Precedence
+
+Values set in `maven_opts` will be _preprended_ to any existing
+`MAVEN_OPTS` value. This ensures that those already specified will win over
+those added in `mavenrc`.
+
+If you would prefer these options to win, instead use:
+
+```puppet
+  maven_opts        => "",
+  mavenrc_additions => 'MAVEN_OPTS="$MAVEN_OPTS -Xmx1024m"
+```
+
 Examples
 --------
 

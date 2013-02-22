@@ -1,0 +1,3 @@
+[submodule "modules/wget"]
+	path = modules/wget
+	url = https://github.com/maestrodev/puppet-wget.git

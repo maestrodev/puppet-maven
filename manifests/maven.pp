@@ -28,7 +28,7 @@
 #     version => "2.2.1",
 #   }
 #
-class maven::maven( $version = '2.2.1',
+define maven::maven( $version = '2.2.1',
 	$binary = undef,
 	$installation_dir='/opt',
 	$default_mvn = true,

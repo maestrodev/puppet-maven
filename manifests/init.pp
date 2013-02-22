@@ -22,6 +22,7 @@
 # Parameters:
 #   - $version:
 #         Maven version.
+#	-
 #
 # Requires:
 #   Java package installed.
@@ -31,12 +32,32 @@
 #     version => "2.2.1",
 #   }
 #
-class maven {
-
-  notice('Installing Maven module pre-requisites')
-
-  class { 'maven::maven' :
-    version => '2.2.1',
-  }
-
-}
+class maven (
+	$install_managed = false,
+	$install_package = true,
+	$version = $maven::params::version
+) inherits maven::params{
+	notice('Installing Maven module pre-requisites') 
+	
+	if $install_package {
+		case $install_managed {
+			true : {
+				class {
+					'maven::managed' :
+						version => $version,
+				}
+			}
+			default : {
+				## ensure backward compatibility of module
+				$concrete_version = $version == latest ? {
+					true => '2.2.1',
+					default => "$version",	
+				}
+				class {
+					'maven::maven' :
+						version => "$concrete_version",
+				}
+			}
+		}
+	}
+} 

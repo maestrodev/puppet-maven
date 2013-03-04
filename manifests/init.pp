@@ -59,4 +59,23 @@ class maven (
 			}
 		}
 	}
+	
+	## ensure that the standard tmp directory structure is present
+	file { "$maven::params::tmp_dir":
+		ensure => directory,
+		mode => '0777',				
+	}	
+	file { "$maven::params::client_tmp_dir":
+		ensure => directory,
+		mode => '0777',		
+		require => File["$maven::params::tmp_dir"],		
+	}
+	
+	## this is only executed at the end of a puppet recipe if it has been notified
+	## classes and definition, that cause a notification: maven::client::download
+	exec { "$maven::params::cleanup_client":
+		command => "rm -rf $maven::params::client_tmp_dir",
+		path => ["/bin"],
+		refreshonly => true,
+	}
 } 

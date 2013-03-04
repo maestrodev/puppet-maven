@@ -53,8 +53,7 @@ class maven (
 					true => '2.2.1',
 					default => "$version",	
 				}
-				class {
-					'maven::maven' :
+				maven::maven { "maven_manually_$concrete_version" :
 						version => "$concrete_version",
 				}
 			}

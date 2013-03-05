@@ -47,7 +47,7 @@ define maven::maven( $version = '2.2.1',
   		undef : {
   			$local_file = "/tmp/apache-maven-${version}-bin.tar.gz"
   			if "x${repo['url']}x" != 'xx' {
-			    wget::authfetch { 'fetch-maven':
+			    wget::authfetch { "fetch-maven-$version":
 			      source      => "${repo['url']}/org/apache/maven/apache-maven/$version/apache-maven-${version}-bin.tar.gz",
 			      destination => $local_file,
 			      user        => $repo['username'],
@@ -56,7 +56,7 @@ define maven::maven( $version = '2.2.1',
 			    }
 			} else {
 	  			## undef=default value >> DEFAULT BEHAVIOUR: download the maven binary from apache.org 
-			    wget::fetch { 'fetch-maven':
+			    wget::fetch { "fetch-maven-$version":
 			      source      => "http://archive.apache.org/dist/maven/binaries/apache-maven-${version}-bin.tar.gz",
 			      destination => $local_file,
 			      before      => Exec["${local_file}_extract"],
@@ -71,7 +71,7 @@ define maven::maven( $version = '2.2.1',
 	    	$local_file="/tmp/$file_name"
 	    	case $binary_name_segments[0] {
 	    		'http','https': {
-	    			wget::fetch { 'fetch-maven':
+	    			wget::fetch { "fetch-maven-$file_name":
 				      source      => "$binary",
 				      destination => $local_file,
 				      before      => Exec["${local_file}_extract"],
@@ -91,7 +91,7 @@ define maven::maven( $version = '2.2.1',
     
   }
   
-  archmngt::extract { "maven" :
+  archmngt::extract { "maven_$local_file" :
   	archive_file => "$local_file",
 	target_dir => "$installation_dir",
 	overwrite => true,

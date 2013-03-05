@@ -49,7 +49,8 @@ class maven (
 			}
 			default : {
 				## ensure backward compatibility of module
-				$concrete_version = $version == latest ? {
+				$is_latest = ($version == latest)
+				$concrete_version = $is_latest ? {
 					true => '2.2.1',
 					default => "$version",	
 				}

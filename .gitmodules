@@ -1,0 +1,9 @@
+[submodule "modules/wget"]
+	path = modules/wget
+	url = https://github.com/maestrodev/puppet-wget.git
+[submodule "modules/archmngt"]
+	path = modules/archmngt
+	url = https://github.com/akquinet/puppet-archmngt.git
+[submodule "modules/stdlib"]
+	path = modules/stdlib
+	url = https://github.com/puppetlabs/puppetlabs-stdlib.git

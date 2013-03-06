@@ -1,4 +1,4 @@
-define maven::client::download (	
+define maven::client_download (	
 	$tmp_dir = "${maven::params::client_tmp_dir}",
 	$localrepo_dir = "${maven::params::client_localrepo_dir}",
 	$enc_master_password, $username, $enc_password, $server_url,

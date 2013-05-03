@@ -1,4 +1,8 @@
-/.project
-/pkg
-/metadata.json
-/spec/fixtures/
+.idea
+.rvmrc
+.project
+.librarian/
+.tmp/
+pkg/
+doc/
+spec/fixtures/

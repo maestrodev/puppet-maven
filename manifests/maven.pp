@@ -25,10 +25,11 @@
 #
 # Sample Usage:
 #   class {'maven::maven':
-#     version => "2.2.1",
+#     version => "3.0.5",
 #   }
 #
-class maven::maven( $version = '2.2.1',
+class maven::maven(
+  $version = '3.0.5',
   $repo = {
     #url      => 'http://repo1.maven.org/maven2',
     #username => '',

@@ -37,8 +37,8 @@ Puppet::Type.newtype(:maven) do
   end
 
   newparam(:id) do
-    desc "The Maven repository id, ie. 'org.apache.maven:maven-core:jar:2.2.1',
-      'org.apache.maven:maven-core:jar:sources:2.2.1'"
+    desc "The Maven repository id, ie. 'org.apache.maven:maven-core:jar:3.0.5',
+      'org.apache.maven:maven-core:jar:sources:3.0.5'"
   end
   newparam(:groupid) do
     desc "The Maven arifact group id, ie. 'org.apache.maven'"
@@ -47,7 +47,7 @@ Puppet::Type.newtype(:maven) do
     desc "The Maven artifact id, ie. 'maven-core'"
   end
   newparam(:version) do
-    desc "The Maven artifact version, ie. '2.2.1'"
+    desc "The Maven artifact version, ie. '3.0.5'"
   end
   newparam(:packaging) do
     desc "The Maven artifact packaging, ie. 'jar'"

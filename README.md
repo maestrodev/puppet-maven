@@ -90,7 +90,6 @@ Examples
       #password => "",
     },
     user                 => "maven",  # if you want to run it as a different user (defaults to root), will create it if not defined
-    user_system          => true,    # make the user a system user
     maven_opts           => "",      # anything to add to MAVEN_OPTS in ~/.mavenrc
     maven_path_additions => "",      # anything to add to the PATH in ~/.mavenrc
   } ->

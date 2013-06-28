@@ -79,6 +79,15 @@ Examples
     url => "http://repo.acme.com",
     mirrorof => "external:*",      # if you want to use the repo as a mirror, see maven::settings below
   }
+  
+  $proxy = {
+    active => true, #Defaults to true
+    protocol => 'http', #Defaults to 'http'
+    host => 'http://proxy.acme.com',
+    username => 'myuser', #Optional if proxy does not require
+    password => 'mypassword', #Optional if proxy does not require
+    nonProxyHosts => 'www.acme.com', #Optional, provides exceptions to the proxy
+  }
 
   # Install Maven
   class { "maven::maven":
@@ -98,6 +107,7 @@ Examples
   maven::settings { 'maven-user-settings' :
     mirrors => [$central], # mirrors entry in settings.xml, uses id, url, mirrorof from the hash passed
     servers => [$central], # servers entry in settings.xml, uses id, username, password from the hash passed
+    proxies => [$proxy], # proxies entry in settings.xml, active, protocol, host, username, password, nonProxyHosts
     user    => 'maven',
   }
 

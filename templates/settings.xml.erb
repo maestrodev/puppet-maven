@@ -1,13 +1,13 @@
 <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
 
-<%- unless local_repo.empty? -%>
-  <localRepository><%= local_repo %></localRepository>
+<%- unless @local_repo.empty? -%>
+  <localRepository><%= @local_repo %></localRepository>
 
 <%- end -%>
-<% unless mirrors.empty? -%>
+<% unless @mirrors.empty? -%>
   <mirrors>
-<% mirrors.each do |mirror| -%>
+<% @mirrors.each do |mirror| -%>
     <mirror>
       <id><%= mirror['id'] %></id>
       <url><%= mirror['url'] %></url>
@@ -17,9 +17,9 @@
   </mirrors>
 
 <% end -%>
-<% unless servers.empty? -%>
+<% unless @servers.empty? -%>
   <servers>
-<% servers.each do |server| -%>
+<% @servers.each do |server| -%>
     <server>
       <id><%= server['id'] %></id>
       <username><%= server['username'] %></username>
@@ -29,9 +29,9 @@
   </servers>
 
 <% end -%>
-<% unless default_repo_config.empty? and properties.empty? -%>
+<% unless @default_repo_config.empty? and @properties.empty? -%>
   <profiles>
-    <%- unless default_repo_config.empty? -%>
+    <%- unless @default_repo_config.empty? -%>
     <profile>
       <id>default-repo</id>
       <activation>
@@ -40,17 +40,17 @@
       <repositories>
         <repository>
           <id>central</id>
-          <url><%= default_repo_config['url'] %></url>
-          <%- unless default_repo_config['snapshots'].nil? or default_repo_config['snapshots'].empty? -%>
+          <url><%= @default_repo_config['url'] %></url>
+          <%- unless @default_repo_config['snapshots'].nil? or @default_repo_config['snapshots'].empty? -%>
           <snapshots>
-            <%- default_repo_config['snapshots'].sort.each { |key,value| -%>
+            <%- @default_repo_config['snapshots'].sort.each { |key,value| -%>
             <%=  "<#{key}>#{value}</#{key}>" %>
             <%- } -%>
           </snapshots>
           <%- end -%>
-          <%- unless default_repo_config['releases'].nil? or default_repo_config['releases'].empty? -%>
+          <%- unless @default_repo_config['releases'].nil? or @default_repo_config['releases'].empty? -%>
           <releases>
-            <%- default_repo_config['releases'].sort.each { |key,value| -%>
+            <%- @default_repo_config['releases'].sort.each { |key,value| -%>
             <%=  "<#{key}>#{value}</#{key}>" %>
             <%- } -%>
           </releases>
@@ -60,17 +60,17 @@
       <pluginRepositories>
         <pluginRepository>
           <id>central</id>
-          <url><%= default_repo_config['url'] %></url>
-          <%- unless default_repo_config['snapshots'].nil? or default_repo_config['snapshots'].empty? -%>
+          <url><%= @default_repo_config['url'] %></url>
+          <%- unless @default_repo_config['snapshots'].nil? or @default_repo_config['snapshots'].empty? -%>
           <snapshots>
-            <%- default_repo_config['snapshots'].sort.each { |key,value| -%>
+            <%- @default_repo_config['snapshots'].sort.each { |key,value| -%>
             <%=  "<#{key}>#{value}</#{key}>" %>
             <%- } -%>
           </snapshots>
           <%- end -%>
-          <%- unless default_repo_config['releases'].nil? or default_repo_config['releases'].empty? -%>
+          <%- unless @default_repo_config['releases'].nil? or @default_repo_config['releases'].empty? -%>
           <releases>
-            <%- default_repo_config['releases'].sort.each { |key,value| -%>
+            <%- @default_repo_config['releases'].sort.each { |key,value| -%>
             <%=  "<#{key}>#{value}</#{key}>" %>
             <%- } -%>
           </releases>
@@ -79,14 +79,14 @@
       </pluginRepositories>
     </profile>
     <%- end -%>
-    <%- unless properties.empty? -%>
+    <%- unless @properties.empty? -%>
     <profile>
       <id>properties</id>
       <activation>
         <activeByDefault>true</activeByDefault>
       </activation>
       <properties>
-        <%- properties.sort.each { |key, value| -%>
+        <%- @properties.sort.each { |key, value| -%>
         <%=  "<#{key}>#{value}</#{key}>" %>
         <%- } -%>
       </properties>

@@ -1,9 +1,9 @@
-<% if has_variable?("maven_opts") and maven_opts != "" -%>
-export MAVEN_OPTS="<%= maven_opts %> $MAVEN_OPTS"
+<% if has_variable?("maven_opts") and @maven_opts != "" -%>
+export MAVEN_OPTS="<%= @maven_opts %> $MAVEN_OPTS"
 <% end -%>
-<% if has_variable?("maven_path_additions") && maven_path_additions != "" -%>
-export PATH="<%= maven_path_additions %>:$PATH"
+<% if has_variable?("maven_path_additions") && @maven_path_additions != "" -%>
+export PATH="<%= @maven_path_additions %>:$PATH"
 <% end -%>
-<% if has_variable?("mavenrc_additions") && mavenrc_additions != "" -%>
-<%= mavenrc_additions %>
+<% if has_variable?("mavenrc_additions") && @mavenrc_additions != "" -%>
+<%= @mavenrc_additions %>
 <% end -%>

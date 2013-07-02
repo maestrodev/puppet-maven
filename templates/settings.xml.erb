@@ -29,6 +29,38 @@
   </servers>
 
 <% end -%>
+<% unless @proxies.empty? -%>
+  <proxies>
+<% @proxies.each do |proxy| -%>
+    <proxy>
+<% if(proxy['active'].nil?) -%>
+      <active>true</active>
+<% else -%>
+      <active><%= proxy['active'] %></active>
+<% end -%>
+<% if(proxy['protocol'].nil?) -%>
+      <protocol>http</protocol>
+<% else -%>
+      <protocol><%= proxy['protocol'] %></protocol>
+<% end -%>
+      <host><%= proxy['host'] %></host>
+<% unless(proxy['port'].nil?) -%>
+      <port><%= proxy['port'] %></port>
+<% end -%>
+<% unless(proxy['username'].nil?) -%>
+      <username><%= proxy['username'] %></username>
+<% end -%>
+<% unless(proxy['password'].nil?) -%>
+      <password><%= proxy['password'] %></password>
+<% end -%>
+<% unless(proxy['nonProxyHosts'].nil?) -%>
+      <nonProxyHosts><%= proxy['nonProxyHosts'] %></nonProxyHosts>
+<% end -%>
+    </proxy>
+<% end -%>
+  </proxies>
+
+<% end -%>
 <% unless @default_repo_config.empty? and @properties.empty? -%>
   <profiles>
     <%- unless @default_repo_config.empty? -%>

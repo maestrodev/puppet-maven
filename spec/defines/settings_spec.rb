@@ -46,6 +46,14 @@ describe "maven::settings" do
         'checksumPolicy' => 'fail',
     }
   }}
+  let(:proxy) {{
+    'active' => true,
+    'protocol' => 'http',
+    'host' => 'http://proxy.acme.com',
+    'username' => 'myuser',
+    'password' => 'mypassword',
+    'nonProxyHosts' => 'www.acme.com',
+  }}
   let(:properties) {{
     'sonar.jdbc.url' => 'jdbc:postgresql://localhost:5432/sonar',
     'sonar.jdbc.driverClassName' => 'org.postgresql.Driver',
@@ -110,7 +118,16 @@ describe "maven::settings" do
       }}
 
     it_behaves_like :maven_settings, "local-repo-settings.xml"
+  end
 
+  context "with proxy" do
+    let(:params) {{
+          :user => "u",
+          :home => "/home/u",
+          :proxies => [proxy],
+      }}
+
+    it_behaves_like :maven_settings, "proxy-settings.xml"
   end
 
   context "with the lot" do

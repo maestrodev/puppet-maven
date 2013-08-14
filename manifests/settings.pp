@@ -43,7 +43,19 @@
 #   snapshots=> {
 #     key=>value
 #   }
-# }]
+# },...]
+#
+# # Provided for backwards compatibility
+# # A shortcut to essentially add the central repo to the above list of repos.
+# default_repo_config => {
+#   url,
+#   releases => {
+#     key=>value
+#   },
+#   snapshots=> {
+#     key=>value
+#   }
+# }
 #
 # proxies => [{
 #   active, #optional, default to true
@@ -55,7 +67,13 @@
 #   nonProxyHosts #optional
 # },...]
 define maven::settings( $home = undef, $user = 'root',
-  $servers = [], $mirrors = [], $repos = [], $properties = {}, $local_repo = '', $proxies=[]) {
+  $servers = [], $mirrors = [], $default_repo_config = undef, $repos = [],
+  $properties = {}, $local_repo = '', $proxies=[]) {
+
+  unless $default_repo_config == undef {
+    $default_repo_config['id'] = 'central'
+    $repos += $default_repo_config
+  }
 
   if $home == undef {
     $home_real = $user ? {

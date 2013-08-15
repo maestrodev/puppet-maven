@@ -20,15 +20,16 @@ puppet module install pkg/maestrodev-maven-1.0.1.tar.gz
 
 Of course, you can also clone the repository straight into `/etc/puppet/modules/maven` as well.
 
+Developing and Testing the Module
+---------------------------------
+
 If you are developing the module, it can be built using `rake`:
 
 ```sh
 gem install bundler
 bundle
-rake
+rake spec
 ```
-
-In this case other required gems are automatically installed, and the package resides in the same location for publishing to your Puppet master.
 
 Usage
 -----
@@ -55,7 +56,7 @@ or
 
 ### MAVEN_OPTS Precedence
 
-Values set in `maven_opts` will be _preprended_ to any existing
+Values set in `maven_opts` will be _prepended_ to any existing
 `MAVEN_OPTS` value. This ensures that those already specified will win over
 those added in `mavenrc`.
 

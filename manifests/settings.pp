@@ -70,14 +70,6 @@ define maven::settings( $home = undef, $user = 'root',
   $servers = [], $mirrors = [], $default_repo_config = undef, $repos = [],
   $properties = {}, $local_repo = '', $proxies=[]) {
 
-  if $default_repo_config == undef {
-    $allrepos = $repos
-  }
-  else {
-    $default_repo_config['id'] = 'central'
-    $allrepos = $repos + $default_repo_config
-  }
-
   if $home == undef {
     $home_real = $user ? {
       'root'  => '/root',

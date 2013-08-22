@@ -98,10 +98,16 @@ Examples
       #url => "http://repo.maven.apache.org/maven2",
       #username => "",
       #password => "",
-    },
-    user                 => "maven",  # if you want to run it as a different user (defaults to root), will create it if not defined
-    maven_opts           => "",      # anything to add to MAVEN_OPTS in ~/.mavenrc
-    maven_path_additions => "",      # anything to add to the PATH in ~/.mavenrc
+    }
+  } ->
+
+  # Setup a .mavenrc file for the specified user
+  maven::environment { 'maven-env' : 
+      user => 'root',
+      # anything to add to MAVEN_OPTS in ~/.mavenrc
+      maven_opts => '-Xmx1384m',       # anything to add to MAVEN_OPTS in ~/.mavenrc
+      maven_path_additions => "",      # anything to add to the PATH in ~/.mavenrc
+
   } ->
 
   # Create a settings.xml with the repo credentials

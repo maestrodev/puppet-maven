@@ -16,8 +16,59 @@
 #
 # A puppet recipe to set the contents of the settings.xml file
 #
+#
+# servers => [{
+#   id,
+#   username,
+#   password
+# },...]
+#
+# mirrors => [{
+#   id,
+#   url,
+#   mirrorOf
+# },...]
+#
+# properties => {
+#   key=>value
+# }
+#
+# repos => [{
+#   id,
+#   name, #optional
+#   url,
+#   releases => {
+#     key=>value
+#   },
+#   snapshots=> {
+#     key=>value
+#   }
+# },...]
+#
+# # Provided for backwards compatibility
+# # A shortcut to essentially add the central repo to the above list of repos.
+# default_repo_config => {
+#   url,
+#   releases => {
+#     key=>value
+#   },
+#   snapshots=> {
+#     key=>value
+#   }
+# }
+#
+# proxies => [{
+#   active, #optional, default to true
+#   protocol, #optional, defaults to http
+#   host,
+#   port,
+#   username,#optional
+#   password, #optional
+#   nonProxyHosts #optional
+# },...]
 define maven::settings( $home = undef, $user = 'root',
-  $servers = [], $mirrors = [], $default_repo_config = {}, $properties = {}, $local_repo = '', $proxies=[]) {
+  $servers = [], $mirrors = [], $default_repo_config = undef, $repos = [],
+  $properties = {}, $local_repo = '', $proxies=[]) {
 
   if $home == undef {
     $home_real = $user ? {

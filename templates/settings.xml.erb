@@ -61,53 +61,69 @@
   </proxies>
 
 <% end -%>
-<% unless @default_repo_config.empty? and @properties.empty? -%>
+<% 
+  unless @default_repo_config.nil?
+    @default_repo_config['id'] = 'central'
+    @repos << @default_repo_config
+  end
+-%>
+<% unless @repos.empty? and @properties.empty? -%>
   <profiles>
-    <%- unless @default_repo_config.empty? -%>
+    <%- unless @repos.empty? -%>
     <profile>
       <id>default-repo</id>
       <activation>
         <activeByDefault>true</activeByDefault>
       </activation>
       <repositories>
+<% @repos.each do |repo| -%>
         <repository>
-          <id>central</id>
-          <url><%= @default_repo_config['url'] %></url>
-          <%- unless @default_repo_config['snapshots'].nil? or @default_repo_config['snapshots'].empty? -%>
+          <id><%= repo['id'] %></id>
+<% unless repo['name'].nil? -%>
+          <name><%= repo['name'] %></name>
+<% end -%>
+          <url><%= repo['url'] %></url>
+          <%- unless repo['snapshots'].nil? or repo['snapshots'].empty? -%>
           <snapshots>
-            <%- @default_repo_config['snapshots'].sort.each { |key,value| -%>
+            <%- repo['snapshots'].sort.each { |key,value| -%>
             <%=  "<#{key}>#{value}</#{key}>" %>
             <%- } -%>
           </snapshots>
           <%- end -%>
-          <%- unless @default_repo_config['releases'].nil? or @default_repo_config['releases'].empty? -%>
+          <%- unless repo['releases'].nil? or repo['releases'].empty? -%>
           <releases>
-            <%- @default_repo_config['releases'].sort.each { |key,value| -%>
+            <%- repo['releases'].sort.each { |key,value| -%>
             <%=  "<#{key}>#{value}</#{key}>" %>
             <%- } -%>
           </releases>
           <%- end -%>
         </repository>
+<% end -%>
       </repositories>
       <pluginRepositories>
+<% @repos.each do |repo| -%>
         <pluginRepository>
-          <id>central</id>
-          <url><%= @default_repo_config['url'] %></url>
-          <%- unless @default_repo_config['snapshots'].nil? or @default_repo_config['snapshots'].empty? -%>
+          <id><%= repo['id'] %></id>
+<% unless repo['name'].nil? -%>
+          <name><%= repo['name'] %></name>
+<% end -%>
+          <url><%= repo['url'] %></url>
+          <%- unless repo['snapshots'].nil? or repo['snapshots'].empty? -%>
           <snapshots>
-            <%- @default_repo_config['snapshots'].sort.each { |key,value| -%>
+            <%- repo['snapshots'].sort.each { |key,value| -%>
             <%=  "<#{key}>#{value}</#{key}>" %>
             <%- } -%>
           </snapshots>
           <%- end -%>
-          <%- unless @default_repo_config['releases'].nil? or @default_repo_config['releases'].empty? -%>
+          <%- unless repo['releases'].nil? or repo['releases'].empty? -%>
           <releases>
-            <%- @default_repo_config['releases'].sort.each { |key,value| -%>
+            <%- repo['releases'].sort.each { |key,value| -%>
             <%=  "<#{key}>#{value}</#{key}>" %>
             <%- } -%>
           </releases>
           <%- end -%>
         </pluginRepository>
+<% end -%>
       </pluginRepositories>
     </profile>
     <%- end -%>

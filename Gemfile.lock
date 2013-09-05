@@ -15,7 +15,7 @@ GEM
       json
       librarian (>= 0.1.1)
     metaclass (0.0.1)
-    mime-types (1.24)
+    mime-types (1.25)
     mini_portile (0.5.1)
     mocha (0.14.0)
       metaclass (~> 0.0.1)
@@ -25,7 +25,7 @@ GEM
       facter (~> 1.6)
       hiera (~> 1.0)
       rgen (~> 0.6.5)
-    puppet-blacksmith (2.0.1)
+    puppet-blacksmith (2.0.2)
       nokogiri
       puppet (>= 2.7.16)
       rest-client
@@ -38,7 +38,7 @@ GEM
     rake (10.1.0)
     rest-client (1.6.7)
       mime-types (>= 1.16)
-    rgen (0.6.5)
+    rgen (0.6.6)
     rspec (2.14.1)
       rspec-core (~> 2.14.0)
       rspec-expectations (~> 2.14.0)

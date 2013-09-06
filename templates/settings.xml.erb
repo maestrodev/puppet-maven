@@ -62,7 +62,7 @@
 
 <% end -%>
 <% 
-  unless @default_repo_config.nil?
+  unless @default_repo_config.nil? or @default_repo_config.empty?
     @default_repo_config['id'] = 'central'
     @repos << @default_repo_config
   end

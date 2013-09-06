@@ -67,6 +67,16 @@ describe "maven::settings" do
 
   it_behaves_like :maven_settings, "default-settings.xml"
 
+  context "with empty default_repo_config" do
+    let(:params) {{
+          :user => "u",
+          :home => "/home/u",
+          :default_repo_config => {},
+      }}
+
+    it_behaves_like :maven_settings, "default-settings.xml"
+  end
+
   context "with mirrors and settings" do
     let(:params) {{
           :user => "u",

@@ -58,7 +58,7 @@ describe provider_class do
           end
         end
 
-        context 'with output' do
+        context 'with output "busted!"' do
           let(:output) { 'busted!' }
 
           example do
@@ -92,53 +92,162 @@ describe provider_class do
         subject
       end
 
-      it 'should pass that path to mvn' do
-        expect(Puppet::Util::SUIDManager).to receive(:run_and_capture) { |command|
-          expect(command[0]).to match /-Ddest=\/tmp\/blah\.txt/
-        }.and_return [nil, exitstatus]
+      describe 'maven command line' do
+        subject do
+          command_line = nil
 
-        subject
+          expect(Puppet::Util::SUIDManager).to receive(:run_and_capture) { |command|
+            command_line = command[0]
+          }.and_return [nil, exitstatus]
+          provider_class.new(type.new({ path: path }.merge params)).create
+          command_line
+        end
+
+        it 'should include path' do
+          should match /-Ddest=\/tmp\/blah\.txt/
+        end
+
+        it 'should default to plugin version 2.4' do
+          should match /mvn org\.apache\.maven\.plugins:maven-dependency-plugin:2\.4:get/
+        end
+
+        it 'should pass no repoId' do
+          should_not match /-DrepoId=/
+        end
+
+        it 'should pass no artifact coordinates' do
+          should_not match /-Dartifact=/
+        end
+
+        it 'should pass no packaging' do
+          should_not match /-Dpackaging=/
+        end
+
+        it 'should pass no classifier' do
+          should_not match /-Dclassifier=/
+        end
+
+        context 'and a groupId, artifactId, and version' do
+          let(:params) do
+            {
+              groupid: 'groupid_test',
+              artifactid: 'artifactid_test',
+              version: 'version_test'
+            }
+          end
+
+          it 'should pass the provided artifactid' do
+            should match /-DartifactId=artifactid_test/
+          end
+
+          it 'should pass the provided groupid' do
+            should match /-DgroupId=groupid_test/
+          end
+
+          it 'should pass the provided version' do
+            should match /-Dversion=version_test/
+          end
+
+          it 'should pass no packaging' do
+            should_not match /-Dpackaging=/
+          end
+
+          it 'should pass no classifier' do
+            should_not match /-Dclassifier=/
+          end
+
+          context 'and a classifier' do
+            let(:params) do
+              {
+                groupid: 'groupid_test',
+                artifactid: 'artifactid_test',
+                version: 'version_test',
+                classifier: 'classifier_test'
+              }
+            end
+
+            it 'should pass the provided classifier' do
+              should match /-Dclassifier=classifier_test/
+            end
+          end
+
+          context 'and a packaging' do
+            let(:params) do
+              {
+                groupid: 'groupid_test',
+                artifactid: 'artifactid_test',
+                version: 'version_test',
+                packaging: 'packaging_test'
+              }
+            end
+
+            it 'should pass the provided packaging' do
+              should match /-Dpackaging=packaging_test/
+            end
+          end
+        end
+
+        context 'and an id' do
+          let(:params) { { id: 'artifact_test' } }
+
+          it 'should pass the provided id' do
+            should match /-Dartifact=artifact_test/
+          end
+
+          it 'should pass no groupid' do
+            should_not match /-DgroupId=/
+          end
+
+          it 'should pass no artifactid' do
+            should_not match /-DartifactId=/
+          end
+
+          it 'should pass no version' do
+            should_not match /-Dversion=/
+          end
+        end
+
+        context 'and a repoid' do
+          let(:params) { { repoid: 'repoid_test' } }
+
+          it 'should pass the provided repoid' do
+            should match /-DrepoId=repoid_test/
+          end
+        end
+
+        context 'and an explicit pluginversion' do
+          let(:params) { { pluginversion: '2.5' } }
+
+          it 'should pass provided version' do
+            should match /mvn org\.apache\.maven\.plugins:maven-dependency-plugin:2\.5:get/
+          end
+        end
+
+        context 'and an empty repo list' do
+          let(:params) { { repos: [] } }
+
+          it 'should default to http://repos1.maven.apache.org/maven2' do
+            should match /-DremoteRepositories=http:\/\/repo1.maven.apache.org\/maven2/
+          end
+        end
+
+        context 'and a repo list' do
+          let(:params) { { repos: ['http://repo1.com', 'http://repo2.com'] } }
+
+          it 'should pass the provided repos' do
+            should match /-DremoteRepositories=http:\/\/repo1.com,http:\/\/repo2.com/
+          end
+        end
+
+        context 'and a repo string' do
+          let(:params) { { repos: 'http://repo1.com' } }
+
+          it 'should pass the provided repos' do
+            should match /-DremoteRepositories=http:\/\/repo1.com/
+          end
+        end
       end
 
-      it 'should default to plugin version 2.4' do
-        expect(Puppet::Util::SUIDManager).to receive(:run_and_capture) { |command|
-          expect(command[0]).to match /mvn org\.apache\.maven\.plugins:maven-dependency-plugin:2\.4:get/
-        }.and_return [nil, exitstatus]
-
-        subject
-      end
-
-      it 'should use no repoId' do
-        expect(Puppet::Util::SUIDManager).to receive(:run_and_capture) { |command|
-          expect(command[0]).to_not match /-DrepoId=/
-        }.and_return [nil, exitstatus]
-
-        subject
-      end
-
-      it 'should use no id' do
-        expect(Puppet::Util::SUIDManager).to receive(:run_and_capture) { |command|
-          expect(command[0]).to_not match /-Dartifact=/
-        }.and_return [nil, exitstatus]
-
-        subject
-      end
-
-      it 'should use no packaging' do
-        expect(Puppet::Util::SUIDManager).to receive(:run_and_capture) { |command|
-          expect(command[0]).to_not match /-Dpackaging=/
-        }.and_return [nil, exitstatus]
-
-        subject
-      end
-
-      it 'should use no classifier' do
-        expect(Puppet::Util::SUIDManager).to receive(:run_and_capture) { |command|
-          expect(command[0]).to_not match /-Dclassifier=/
-        }.and_return [nil, exitstatus]
-
-        subject
-      end
 
       context 'given a timeout' do
         let(:params) { { timeout: 1 } }
@@ -178,190 +287,6 @@ describe provider_class do
           expect(Puppet::Util::SUIDManager).to receive(:run_and_capture)
             .with(anything(), anything(), 'group_test')
             .and_return [nil, exitstatus]
-
-          subject
-        end
-      end
-
-      context 'and a groupId, artifactId, and version' do
-        let(:params) do
-          {
-            groupid: 'groupid_test',
-            artifactid: 'artifactid_test',
-            version: 'version_test'
-          }
-        end
-
-        it 'should use the provided artifactid' do
-          expect(Puppet::Util::SUIDManager).to receive(:run_and_capture) { |command|
-            expect(command[0]).to match /-DartifactId=artifactid_test/
-          }.and_return [nil, exitstatus]
-
-          subject
-        end
-
-        it 'should use the provided groupid' do
-          expect(Puppet::Util::SUIDManager).to receive(:run_and_capture) { |command|
-            expect(command[0]).to match /-DgroupId=groupid_test/
-          }.and_return [nil, exitstatus]
-
-          subject
-        end
-
-        it 'should use the provided version' do
-          expect(Puppet::Util::SUIDManager).to receive(:run_and_capture) { |command|
-            expect(command[0]).to match /-Dversion=version_test/
-          }.and_return [nil, exitstatus]
-
-          subject
-        end
-
-        it 'should use no packaging' do
-          expect(Puppet::Util::SUIDManager).to receive(:run_and_capture) { |command|
-            expect(command[0]).to_not match /-Dpackaging=/
-          }.and_return [nil, exitstatus]
-
-          subject
-        end
-
-        it 'should use no classifier' do
-          expect(Puppet::Util::SUIDManager).to receive(:run_and_capture) { |command|
-            expect(command[0]).to_not match /-Dclassifier=/
-          }.and_return [nil, exitstatus]
-
-          subject
-        end
-
-        context 'and a classifier' do
-          let(:params) do
-            {
-              groupid: 'groupid_test',
-              artifactid: 'artifactid_test',
-              version: 'version_test',
-              classifier: 'classifier_test'
-            }
-          end
-
-          it 'should use the provided classifier' do
-            expect(Puppet::Util::SUIDManager).to receive(:run_and_capture) { |command|
-              expect(command[0]).to match /-Dclassifier=classifier_test/
-            }.and_return [nil, exitstatus]
-
-            subject
-          end
-        end
-
-        context 'and a packaging' do
-          let(:params) do
-            {
-              groupid: 'groupid_test',
-              artifactid: 'artifactid_test',
-              version: 'version_test',
-              packaging: 'packaging_test'
-            }
-          end
-
-          it 'should use the provided packaging' do
-            expect(Puppet::Util::SUIDManager).to receive(:run_and_capture) { |command|
-              expect(command[0]).to match /-Dpackaging=packaging_test/
-            }.and_return [nil, exitstatus]
-
-            subject
-          end
-        end
-      end
-
-      context 'and an id' do
-        let(:params) { { id: 'artifact_test' } }
-
-        it 'should use the provided id' do
-          expect(Puppet::Util::SUIDManager).to receive(:run_and_capture) { |command|
-            expect(command[0]).to match /-Dartifact=artifact_test/
-          }.and_return [nil, exitstatus]
-
-          subject
-        end
-
-        it 'should use no groupid' do
-          expect(Puppet::Util::SUIDManager).to receive(:run_and_capture) { |command|
-            expect(command[0]).to_not match /-DgroupId=/
-          }.and_return [nil, exitstatus]
-
-          subject
-        end
-
-        it 'should use no artifactid' do
-          expect(Puppet::Util::SUIDManager).to receive(:run_and_capture) { |command|
-            expect(command[0]).to_not match /-DartifactId=/
-          }.and_return [nil, exitstatus]
-
-          subject
-        end
-
-        it 'should use no version' do
-          expect(Puppet::Util::SUIDManager).to receive(:run_and_capture) { |command|
-            expect(command[0]).to_not match /-Dversion=/
-          }.and_return [nil, exitstatus]
-
-          subject
-        end
-      end
-
-      context 'and a repoid' do
-        let(:params) { { repoid: 'repoid_test' } }
-
-        it 'should use the provided repoid' do
-          expect(Puppet::Util::SUIDManager).to receive(:run_and_capture) { |command|
-            expect(command[0]).to match /-DrepoId=repoid_test/
-          }.and_return [nil, exitstatus]
-
-          subject
-        end
-      end
-
-      context 'and an explicit pluginversion' do
-        let(:params) { { pluginversion: '2.5' } }
-
-        it 'should use provided version' do
-          expect(Puppet::Util::SUIDManager).to receive(:run_and_capture) { |command|
-            expect(command[0]).to match /mvn org\.apache\.maven\.plugins:maven-dependency-plugin:2\.5:get/
-          }.and_return [nil, exitstatus]
-
-          subject
-        end
-      end
-
-      context 'and an empty repo list' do
-        let(:params) { { repos: [] } }
-
-        it 'should use http://repos1.maven.apache.org/maven2' do
-          expect(Puppet::Util::SUIDManager).to receive(:run_and_capture) { |command|
-            expect(command[0]).to match /-DremoteRepositories=http:\/\/repo1.maven.apache.org\/maven2/
-          }.and_return [nil, exitstatus]
-
-          subject
-        end
-      end
-
-      context 'and a repo list' do
-        let(:params) { { repos: ['http://repo1.com', 'http://repo2.com'] } }
-
-        it 'should use the provided repos' do
-          expect(Puppet::Util::SUIDManager).to receive(:run_and_capture) { |command|
-            expect(command[0]).to match /-DremoteRepositories=http:\/\/repo1.com,http:\/\/repo2.com/
-          }.and_return [nil, exitstatus]
-
-          subject
-        end
-      end
-
-      context 'and a repo string' do
-        let(:params) { { repos: 'http://repo1.com' } }
-
-        it 'should use the provided repos' do
-          expect(Puppet::Util::SUIDManager).to receive(:run_and_capture) { |command|
-            expect(command[0]).to match /-DremoteRepositories=http:\/\/repo1.com/
-          }.and_return [nil, exitstatus]
 
           subject
         end

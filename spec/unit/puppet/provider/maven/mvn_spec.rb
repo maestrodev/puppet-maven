@@ -23,7 +23,53 @@ describe provider_class do
     its(:exists?) { should be_true }
 
     example do
-      expect { subject.destroy }.to raise_error NotImplementedError
+      expect { subject.ensure = :absent }.to raise_error NotImplementedError
+    end
+  end
+
+  describe '#ensure' do
+    subject { provider_class.new(type.new({ path: path }.merge params)).ensure }
+
+    context 'with an existing file' do
+      let(:path) do
+        file = Tempfile.new 'tmp'
+        file_path = file.path
+        file.close!
+        File.open(file_path, 'w') do |f|
+          f.write 'foo'
+        end
+
+        file_path
+      end
+
+      context 'and a SNAPSHOT version' do
+        let(:params) { { id: 'groupid:artifactid:1.2.3-SNAPSHOT' } }
+
+        context 'and an updated snapshot' do
+          before do
+            expect(Puppet::Util::SUIDManager).to receive(:run_and_capture) { |command|
+              command[0] =~ /-Ddest=([^\s]+)/
+              File.open($1, 'w') do |f|
+                f.write 'bar'
+              end
+            }.and_return ['', OpenStruct.new({exitstatus: 0})]
+          end
+
+          it { should equal :outdated }
+        end
+        context 'and a current snapshot' do
+          before do
+            expect(Puppet::Util::SUIDManager).to receive(:run_and_capture) { |command|
+              command[0] =~ /-Ddest=([^\s]+)/
+              File.open($1, 'w') do |f|
+                f.write 'foo'
+              end
+            }.and_return ['', OpenStruct.new({exitstatus: 0})]
+          end
+
+          it { should equal :present }
+        end
+      end
     end
   end
 
@@ -38,8 +84,8 @@ describe provider_class do
     its(:exists?) { should be_false }
   end
 
-  describe '#create' do
-    subject { provider_class.new(type.new({ path: path }.merge params)).create }
+  describe '#ensure = present' do
+    subject { provider_class.new(type.new({ path: path }.merge params)).ensure = :present }
     let(:exitstatus) { OpenStruct.new exitstatus: 0 }
 
     context 'given a valid path' do
@@ -99,7 +145,7 @@ describe provider_class do
           expect(Puppet::Util::SUIDManager).to receive(:run_and_capture) { |command|
             command_line = command[0]
           }.and_return [nil, exitstatus]
-          provider_class.new(type.new({ path: path }.merge params)).create
+          provider_class.new(type.new({ path: path }.merge params)).ensure = :present
           command_line
         end
 
@@ -125,6 +171,24 @@ describe provider_class do
 
         it 'should pass no classifier' do
           should_not match /-Dclassifier=/
+        end
+
+        it 'should not pass -U' do
+          should_not match /-U/
+        end
+
+        context 'given a SNAPSHOT version' do
+          let(:params) do
+            {
+              groupid: 'groupid_test',
+              artifactid: 'artifactid_test',
+              version: '1.2.3-SNAPSHOT'
+            }
+          end
+
+          it 'should pass -U' do
+            should match /-U/
+          end
         end
 
         context 'and a groupId, artifactId, and version' do
@@ -204,6 +268,18 @@ describe provider_class do
 
           it 'should pass no version' do
             should_not match /-Dversion=/
+          end
+
+          it 'should not pass -U' do
+            should_not match /-U/
+          end
+        end
+
+        context 'and an id with a SNAPSHOT version' do
+          let(:params) { { id: 'groupid:artifactid:1.2.3-SNAPSHOT' } }
+
+          it 'should pass -U' do
+            should match /-U/
           end
         end
 

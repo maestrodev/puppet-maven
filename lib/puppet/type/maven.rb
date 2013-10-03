@@ -19,9 +19,11 @@ Puppet::Type.newtype(:maven) do
 
   @doc = "Maven repository files."
 
-  ensurable do
-    self.defaultvalues
-    defaultto :present
+  newproperty(:ensure) do
+    defaultto(:present)
+
+    newvalue(:present)
+    newvalue(:absent)
   end
 
   # required or puppet will fail with one of these errors

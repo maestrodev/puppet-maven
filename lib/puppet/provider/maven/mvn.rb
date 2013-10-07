@@ -24,15 +24,15 @@ Puppet::Type.type(:maven).provide(:mvn) do
   def ensure
     if !exists?
       :absent
-    elsif outdated?
-      :outdated
+    elsif @resource[:ensure] == :latest && !outdated?
+      :latest
     else
       :present
     end
   end
 
   def ensure=(value)
-    value == :present ? create : destroy
+    ([:present, :latest] & [value]).any? ? create(value) : destroy
   end
 
   private
@@ -77,11 +77,11 @@ Puppet::Type.type(:maven).provide(:mvn) do
     end
   end
 
-  def create
-    download name
+  def create(value)
+    download name, value == :latest
   end
 
-  def download(dest)
+  def download(dest, latest)
     # Remote repositories to use
     debug "Repositories to use: #{repos.join(', ')}"
 
@@ -95,7 +95,7 @@ Puppet::Type.type(:maven).provide(:mvn) do
       msg = "#{groupid}:#{artifactid}:#{version}:" + (packaging.nil? ? "" : packaging) + ":" + (classifier.nil? ? "" : classifier)
     end
 
-    command_string = command_string + "-U " if snapshot?
+    command_string = command_string + "-U " if snapshot? && latest
 
     # set the repoId if specified
     command_string = command_string + " -DrepoId=#{repoid}" unless repoid.nil?
@@ -140,7 +140,7 @@ Puppet::Type.type(:maven).provide(:mvn) do
   def outdated?
     if snapshot?
       tempfile = Tempfile.new 'mvn'
-      download tempfile.path
+      download tempfile.path, true
       !FileUtils.compare_file @resource[:name], tempfile.path
     end
   end

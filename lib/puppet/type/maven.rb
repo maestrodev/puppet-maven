@@ -23,7 +23,7 @@ Puppet::Type.newtype(:maven) do
     defaultto(:present)
 
     newvalue(:present)
-    newvalue(:absent)
+    newvalue(:latest)
   end
 
   # required or puppet will fail with one of these errors

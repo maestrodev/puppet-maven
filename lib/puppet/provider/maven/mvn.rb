@@ -69,12 +69,14 @@ Puppet::Type.type(:maven).provide(:mvn) do
     end
   end
 
-  def snapshot?
+  def updatable?
     if full_id.nil?
-      version =~ /SNAPSHOT$/
+      ver = version
     else
-      full_id.split(':')[2] =~ /SNAPSHOT$/
+      ver = full_id.split(':')[2]
     end
+
+    ver =~ /SNAPSHOT$/ || ver == 'LATEST' || ver == 'RELEASE'
   end
 
   def create(value)
@@ -95,7 +97,7 @@ Puppet::Type.type(:maven).provide(:mvn) do
       msg = "#{groupid}:#{artifactid}:#{version}:" + (packaging.nil? ? "" : packaging) + ":" + (classifier.nil? ? "" : classifier)
     end
 
-    command_string = command_string + "-U " if snapshot? && latest
+    command_string = command_string + "-U " if updatable? && latest
 
     # set the repoId if specified
     command_string = command_string + " -DrepoId=#{repoid}" unless repoid.nil?
@@ -138,7 +140,7 @@ Puppet::Type.type(:maven).provide(:mvn) do
   end
 
   def outdated?
-    if snapshot?
+    if updatable?
       tempfile = Tempfile.new 'mvn'
       download tempfile.path, true
       !FileUtils.compare_file @resource[:name], tempfile.path

@@ -143,6 +143,34 @@ describe provider_class do
               should match /-U/
             end
           end
+
+          context 'given the version LATEST' do
+            let(:params) do
+              {
+                groupid: 'groupid_test',
+                artifactid: 'artifactid_test',
+                version: 'LATEST'
+              }
+            end
+
+            it 'should pass -U' do
+              should match /-U/
+            end
+          end
+
+          context 'given the version RELEASE' do
+            let(:params) do
+              {
+                groupid: 'groupid_test',
+                artifactid: 'artifactid_test',
+                version: 'LATEST'
+              }
+            end
+
+            it 'should pass -U' do
+              should match /-U/
+            end
+          end
         end
       end
     end

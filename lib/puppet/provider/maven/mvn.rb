@@ -15,38 +15,77 @@
 require 'puppet/resource'
 require 'puppet/resource/catalog'
 require 'fileutils'
+require 'tempfile'
 
 Puppet::Type.type(:maven).provide(:mvn) do
   desc "Maven download using mvn command line."
   include Puppet::Util::Execution
 
-  def create
-    plugin_version = @resource[:pluginversion].nil? ? "2.4" : @resource[:pluginversion]
+  def ensure
+    if !exists?
+      :absent
+    elsif @resource[:ensure] == :latest && !outdated?
+      :latest
+    else
+      :present
+    end
+  end
 
-    # Remote repositories to use
+  def ensure=(value)
+    ([:present, :latest] & [value]).any? ? create(value) : destroy
+  end
+
+  private
+  [:artifactid,
+  :version,
+  :packaging,
+  :classifier,
+  :options,
+  :user,
+  :group,
+  :groupid,
+  :repoid].each { |m| define_method(m) { @resource[m] } }
+
+  [:user, :group].each do |m|
+    define_method(m) { @resource[m].nil? || @resource[m].empty? ? 'root' : @resource[m] }
+  end
+
+  def full_id
+    @resource[:id]
+  end
+
+  def plugin_version
+    @resource[:pluginversion].nil? ? "2.4" : @resource[:pluginversion]
+  end
+
+  def repos
     repos = @resource[:repos]
     if repos.nil? || repos.empty?
-      repos = ["http://repo1.maven.apache.org/maven2"]
+      ["http://repo1.maven.apache.org/maven2"]
     elsif !repos.kind_of?(Array)
-      repos = [repos]
+      [repos]
+    else
+      repos
     end
-    repoid = @resource[:repoid]
+  end
+
+  def updatable?
+    if full_id.nil?
+      ver = version
+    else
+      ver = full_id.split(':')[2]
+    end
+
+    ver =~ /SNAPSHOT$/ || ver == 'LATEST' || ver == 'RELEASE'
+  end
+
+  def create(value)
+    download name, value == :latest
+  end
+
+  def download(dest, latest)
+    # Remote repositories to use
     debug "Repositories to use: #{repos.join(', ')}"
-
-    # Where to copy the file from the local repository
-    dest = name
-
-    full_id = @resource[:id]
-    groupid = @resource[:groupid]
-    artifactid = @resource[:artifactid]
-    version = @resource[:version]
-    packaging = @resource[:packaging]
-    classifier = @resource[:classifier]
-    options = @resource[:options]
-    user = @resource[:user]
-    user = user.nil? || user.empty? ? "root" : user
-    group = @resource[:group]
-    group = group.nil? || group.empty? ? "root" : group
 
     # Download the artifact fom the repo
     command_string = "-Dartifact=#{full_id}"
@@ -57,6 +96,8 @@ Puppet::Type.type(:maven).provide(:mvn) do
       command_string = command_string + "-Dclassifier=#{classifier}" unless classifier.nil?
       msg = "#{groupid}:#{artifactid}:#{version}:" + (packaging.nil? ? "" : packaging) + ":" + (classifier.nil? ? "" : classifier)
     end
+
+    command_string = command_string + " -U " if updatable? && latest
 
     # set the repoId if specified
     command_string = command_string + " -DrepoId=#{repoid}" unless repoid.nil?
@@ -96,5 +137,13 @@ Puppet::Type.type(:maven).provide(:mvn) do
   def exists?
     # we could check if the file exists in the local repo but Buildr will do that before attempting to download it
     return File.exists?(@resource[:name])
+  end
+
+  def outdated?
+    if updatable?
+      tempfile = Tempfile.new 'mvn'
+      download tempfile.path, true
+      !FileUtils.compare_file @resource[:name], tempfile.path
+    end
   end
 end

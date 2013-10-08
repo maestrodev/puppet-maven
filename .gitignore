@@ -1,10 +1,14 @@
 .idea
 .rvmrc
 .ruby-version
+.ruby-gemset
 .project
 .librarian/
 .tmp/
 pkg/
 doc/
-spec/fixtures/
+/spec/fixtures/manifests
+/spec/fixtures/modules
 .vagrant/
+tmp
+.rspec_system

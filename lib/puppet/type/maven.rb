@@ -19,9 +19,20 @@ Puppet::Type.newtype(:maven) do
 
   @doc = "Maven repository files."
 
-  ensurable do
-    self.defaultvalues
-    defaultto :present
+  newproperty(:ensure) do
+    desc <<-EOT
+      May be one of two values: 'present' or 'latest'.  When 'present' (the default)
+      the specified maven artifact is downloaded when no file exists
+      at 'path' (or 'name' if no path is specified.)  This is approporate
+      when the specified maven artifact refers to a released (non-SNAPSHOT)
+      artifact.  If 'latest' is specified and the value of version is
+      'RELEASE', 'LATEST', or a SNAPSHOT the repository is queried for the
+      most recent version.
+    EOT
+    defaultto(:present)
+
+    newvalue(:present)
+    newvalue(:latest)
   end
 
   # required or puppet will fail with one of these errors

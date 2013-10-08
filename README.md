@@ -29,6 +29,7 @@ If you are developing the module, it can be built using `rake`:
 gem install bundler
 bundle
 rake spec
+rake spec:system
 ```
 
 Usage
@@ -53,6 +54,17 @@ or
     repos => ["id::layout::http://repo.acme.com","http://repo2.acme.com"],
   }
 ```
+
+### ensure
+
+`ensure` may be one of two values:
+* `present` (the default) -- the specified maven artifact is downloaded when no file exists
+   at `path` (or `name` if no path is specified.)  This is probably makes
+   sense when the specified maven artifact refers to a released (non-SNAPSHOT)
+   artifact.
+*  `latest` -- if value of version is `RELEASE`, `LATEST`, or a SNAPSHOT the repository
+   is queried for an updated artifact.  If an updated artifact is found the file
+   at `path` is replaced.
 
 ### MAVEN_OPTS Precedence
 

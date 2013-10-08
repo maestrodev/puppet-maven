@@ -97,7 +97,7 @@ Puppet::Type.type(:maven).provide(:mvn) do
       msg = "#{groupid}:#{artifactid}:#{version}:" + (packaging.nil? ? "" : packaging) + ":" + (classifier.nil? ? "" : classifier)
     end
 
-    command_string = command_string + "-U " if updatable? && latest
+    command_string = command_string + " -U " if updatable? && latest
 
     # set the repoId if specified
     command_string = command_string + " -DrepoId=#{repoid}" unless repoid.nil?

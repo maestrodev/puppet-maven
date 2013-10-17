@@ -33,7 +33,7 @@ class maven::buildr( $java_home ) {
     ensure   => '0.8.7',
     provider => gem,
   }
-  maven::install-gem { 'buildr' :
+  maven::install_gem { 'buildr' :
     version => '1.4.5',
     require => Package['rake'],
   }

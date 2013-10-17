@@ -9,6 +9,7 @@ describe 'maven::maven' do
         'user'        => nil,
         'password'    => nil
     ) end
+    it { should contain_exec('maven-untar') }
   end
 
   context "when downloading maven from another repo" do
@@ -26,4 +27,20 @@ describe 'maven::maven' do
         'password'    => 'p')
     end
   end
+
+  context "when maven was already installed" do
+
+    context "in the same version" do
+      let(:facts) {{ :maven_version => '3.0.5' }}
+      it { should_not contain_wget__fetch('fetch-maven') }
+      it { should_not contain_exec('maven-untar') }
+    end
+
+    context "in a different version" do
+      let(:facts) {{ :maven_version => '3.0.4' }}
+      it { should contain_wget__fetch('fetch-maven') }
+      it { should contain_exec('maven-untar') }
+    end
+  end
+
 end

@@ -38,35 +38,40 @@ class maven::maven(
 
   $archive = "/tmp/apache-maven-${version}-bin.tar.gz"
 
-  # we could use puppet-stdlib function !empty(repo) but avoiding adding a new
-  # dependency for now
-  if "x${repo['url']}x" != 'xx' {
-    wget::authfetch { 'fetch-maven':
-      source      => "${repo['url']}/org/apache/maven/apache-maven/$version/apache-maven-${version}-bin.tar.gz",
-      destination => $archive,
-      user        => $repo['username'],
-      password    => $repo['password'],
-      before      => Exec['maven-untar'],
+  # Avoid redownloading when tmp tar.gz is deleted
+  if $::maven_version != $version {
+
+    # we could use puppet-stdlib function !empty(repo) but avoiding adding a new
+    # dependency for now
+    if "x${repo['url']}x" != 'xx' {
+      wget::authfetch { 'fetch-maven':
+        source      => "${repo['url']}/org/apache/maven/apache-maven/$version/apache-maven-${version}-bin.tar.gz",
+        destination => $archive,
+        user        => $repo['username'],
+        password    => $repo['password'],
+        before      => Exec['maven-untar'],
+      }
+    } else {
+      wget::fetch { 'fetch-maven':
+        source      => "http://archive.apache.org/dist/maven/binaries/apache-maven-${version}-bin.tar.gz",
+        destination => $archive,
+        before      => Exec['maven-untar'],
+      }
     }
-  } else {
-    wget::fetch { 'fetch-maven':
-      source      => "http://archive.apache.org/dist/maven/binaries/apache-maven-${version}-bin.tar.gz",
-      destination => $archive,
-      before      => Exec['maven-untar'],
+    exec { 'maven-untar':
+      command => "tar xf /tmp/apache-maven-${version}-bin.tar.gz",
+      cwd     => '/opt',
+      creates => "/opt/apache-maven-${version}",
+      path    => ['/bin','/usr/bin'],
     }
   }
-  exec { 'maven-untar':
-    command => "tar xf /tmp/apache-maven-${version}-bin.tar.gz",
-    cwd     => '/opt',
-    creates => "/opt/apache-maven-${version}",
-    path    => ['/bin','/usr/bin'],
-  } ->
+
   file { '/usr/bin/mvn':
     ensure => link,
     target => "/opt/apache-maven-${version}/bin/mvn",
-  }
+    require => Exec['maven-untar'],
+  } ->
   file { '/usr/local/bin/mvn':
     ensure  => absent,
-    require => Exec['maven-untar'],
   }
 }

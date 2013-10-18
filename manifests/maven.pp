@@ -64,14 +64,14 @@ class maven::maven(
       creates => "/opt/apache-maven-${version}",
       path    => ['/bin','/usr/bin'],
     }
-  }
 
-  file { '/usr/bin/mvn':
-    ensure => link,
-    target => "/opt/apache-maven-${version}/bin/mvn",
-    require => Exec['maven-untar'],
-  } ->
-  file { '/usr/local/bin/mvn':
-    ensure  => absent,
+    file { '/usr/bin/mvn':
+      ensure  => link,
+      target  => "/opt/apache-maven-${version}/bin/mvn",
+      require => Exec['maven-untar'],
+    } ->
+    file { '/usr/local/bin/mvn':
+      ensure  => absent,
+    }
   }
 }

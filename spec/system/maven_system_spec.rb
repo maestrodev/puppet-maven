@@ -2,10 +2,10 @@ require 'spec_helper_system'
 
 describe 'maven type' do
   before(:all) do
-    puppet_apply (%Q(
-class { 'java': }
-class { 'maven::maven': }
-     ))
+    [0,2].should include(puppet_apply(%Q(
+      class { 'java': }
+      class { 'maven::maven': }
+     )).exit_code)
   end
 
   it 'should be idempotent' do
@@ -17,10 +17,8 @@ class { 'maven::maven': }
           'http://mirrors.ibiblio.org/pub/mirrors/maven2'],
       }
     )
-    puppet_apply pp
-    puppet_apply(pp) do |r|
-      expect(r.exit_code).to equal 0
-    end
+    puppet_apply(pp)
+    puppet_apply(pp).exit_code.should be_zero
   end
 
   context 'an existing SNAPSHOT artifact' do
@@ -29,14 +27,12 @@ class { 'maven::maven': }
     let(:repo_version) { 1 }
 
     before(:each) do
-      shell 'rm -rf /var/www/html/repo'
-      shell 'rm -rf /root/.m2/repository/org/foo'
-      shell 'rm -f /tmp/touch-me-if-updated'
+      shell 'rm -rf /var/www/html/repo /root/.m2/repository/org/foo /tmp/touch-me-if-updated'
 
       shell 'mkdir -p /var/www/html'
       fixture_rcp "system/maven/repo-#{repo_version}", '/var/www/html/repo'
 
-      puppet_apply(%Q(
+      [0,2].should include(puppet_apply(%Q(
         package{'httpd': ensure => 'present'} ->
         service{'httpd': ensure  => 'running' } ->
 
@@ -51,7 +47,7 @@ class { 'maven::maven': }
           refreshonly => true,
           subscribe => Maven['/tmp/hello.jar']
         }
-      ))
+      )).exit_code)
     end
 
     describe file('/tmp/hello.jar') do

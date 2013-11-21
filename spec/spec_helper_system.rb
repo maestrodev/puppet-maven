@@ -20,16 +20,16 @@ RSpec.configure do |c|
     puppet_install
 
     #Clean out modules from last run
-    shell 'rm -rf /etc/puppet/modules/*'
+    shell('rm -rf /etc/puppet/modules/*').exit_code.should be_zero
 
-    shell 'puppet module install maestrodev/wget -v 1.0.0'
-    shell 'puppet module install puppetlabs/java -v 1.0.1'
+    shell('puppet module install maestrodev/wget -v 1.0.0').exit_code.should be_zero
+    shell('puppet module install puppetlabs/java -v 1.0.1').exit_code.should be_zero
 
     puppet_module_install source: proj_dir, module_name: 'maven'
 
     #geezes
-    shell 'puppet module install spiette/selinux -v 0.5.3'
-    puppet_apply "class{'selinux': mode => 'disabled'}"
+    shell('puppet module install spiette/selinux -v 0.5.3').exit_code.should be_zero
+    [0,2].should include(puppet_apply("class{'selinux': mode => 'disabled'}").exit_code)
   end
 end
 

@@ -4,7 +4,6 @@ require 'rspec-system-puppet/helpers'
 require 'rspec-system-serverspec/helpers'
 
 include RSpecSystemPuppet::Helpers
-include Serverspec::Helper::RSpecSystem
 
 RSpec.configure do |c|
   # Enable color in Jenkins

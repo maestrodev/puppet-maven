@@ -9,10 +9,7 @@ describe "maven::environment" do
   expected_filename = '/home/u/.mavenrc'
   it { should contain_file(expected_filename).with_owner('u') }
 
-  it 'should generate valid mavenrc' do
-    content = catalogue.resource('file', expected_filename).send(:parameters)[:content]
-    content.should == read_file("default-mavenrc")
-  end
+  it { should contain_file(expected_filename).with_content(read_file("default-mavenrc")) }
 
   context "provide options for mavenrc" do
     let(:params) {{
@@ -22,11 +19,7 @@ describe "maven::environment" do
         :mavenrc_additions => "echo Hello World!"
     }}
 
-    it 'should generate valid mavenrc' do
-      content = catalogue.resource('file', expected_filename).send(:parameters)[:content]
-      content.should == read_file("populated-mavenrc")
-    end
-
+    it { should contain_file(expected_filename).with_content(read_file("populated-mavenrc")) }
   end
 
 end

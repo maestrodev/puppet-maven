@@ -104,7 +104,7 @@ Puppet::Type.type(:maven).provide(:mvn) do
 
     debug "mvn downloading (if needed) repo file #{msg} to #{dest} from #{repos.join(', ')}"
 
-    command = ["mvn org.apache.maven.plugins:maven-dependency-plugin:#{plugin_version}:get #{command_string} -DremoteRepositories=#{repos.join(',')} -Ddest=#{dest} -Dtransitive=false -Ppuppet-maven #{options}"]
+    command = ["mvn org.apache.maven.plugins:maven-dependency-plugin:#{plugin_version}:get #{command_string} -DremoteRepositories=#{repos.join(',')} -Ddest=#{dest} -Dtransitive=false -Pdefault-repo #{options}"]
 
     timeout = @resource[:timeout].nil? ? 0 : @resource[:timeout].to_i
     output = nil

@@ -6,12 +6,14 @@ describe "maven::environment" do
       :user => "u",
   } }
 
-  expected_filename = '/home/u/.mavenrc'
-  it { should contain_file(expected_filename).with_owner('u') }
+  let(:expected_filename) { '/home/u/.mavenrc' }
 
-  it { should contain_file(expected_filename).with_content(read_file("default-mavenrc")) }
+  context "default params", :compile do
+    it { should contain_file(expected_filename).with_owner('u') }
+    it { should contain_file(expected_filename).with_content(read_file("default-mavenrc")) }
+  end
 
-  context "provide options for mavenrc" do
+  context "provide options for mavenrc", :compile do
     let(:params) {{
         :user => "u",
         :maven_opts => "-Xmx256m",

@@ -65,9 +65,11 @@ describe "maven::settings" do
 
   let(:expected_filename) { '/home/u/.m2/settings.xml' }
 
-  it_behaves_like :maven_settings, "default-settings.xml"
+  context "default", :compile do
+    it_behaves_like :maven_settings, "default-settings.xml"
+  end
 
-  context "with empty default_repo_config" do
+  context "with empty default_repo_config", :compile do
     let(:params) {{
           :user => "u",
           :home => "/home/u",
@@ -77,7 +79,7 @@ describe "maven::settings" do
     it_behaves_like :maven_settings, "default-settings.xml"
   end
 
-  context "with mirrors and settings" do
+  context "with mirrors and settings", :compile do
     let(:params) {{
           :user => "u",
           :home => "/home/u",
@@ -88,7 +90,7 @@ describe "maven::settings" do
     it_behaves_like :maven_settings, "mirror-servers-settings.xml"
   end
 
-  context "with default repository" do
+  context "with default repository", :compile do
     let(:params) {{
           :user => "u",
           :home => "/home/u",
@@ -98,7 +100,7 @@ describe "maven::settings" do
     it_behaves_like :maven_settings, "default-repo-settings.xml"
   end
 
-  context "with default repository configuration url only" do
+  context "with default repository configuration url only", :compile do
     let(:params) {{
           :user => "u",
           :home => "/home/u",
@@ -110,7 +112,7 @@ describe "maven::settings" do
     it_behaves_like :maven_settings, "default-repo-only-url-settings.xml"
   end
 
-  context "with properties" do
+  context "with properties", :compile do
     let(:params) {{
           :user => "u",
           :home => "/home/u",
@@ -120,7 +122,7 @@ describe "maven::settings" do
     it_behaves_like :maven_settings, "properties-settings.xml"
   end
 
-  context "with local repository" do
+  context "with local repository", :compile do
     let(:params) {{
           :user => "u",
           :home => "/home/u",
@@ -130,7 +132,7 @@ describe "maven::settings" do
     it_behaves_like :maven_settings, "local-repo-settings.xml"
   end
 
-  context "with proxy" do
+  context "with proxy", :compile do
     let(:params) {{
           :user => "u",
           :home => "/home/u",
@@ -140,7 +142,7 @@ describe "maven::settings" do
     it_behaves_like :maven_settings, "proxy-settings.xml"
   end
 
-  context "with the lot" do
+  context "with the lot", :compile do
     let(:params) {{
           :user => "u",
           :home => "/home/u",

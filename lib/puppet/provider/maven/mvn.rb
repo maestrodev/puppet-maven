@@ -109,6 +109,7 @@ Puppet::Type.type(:maven).provide(:mvn) do
     timeout = @resource[:timeout].nil? ? 0 : @resource[:timeout].to_i
     output = nil
     status = nil
+    exitstatus = nil
 
     begin
       Timeout::timeout(timeout) do

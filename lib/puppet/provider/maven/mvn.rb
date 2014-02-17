@@ -75,6 +75,7 @@ Puppet::Type.type(:maven).provide(:mvn) do
     else
       ver = full_id.split(':')[2]
     end
+
     ver =~ /SNAPSHOT$/ || ver == 'LATEST' || ver == 'RELEASE'
   end
 
@@ -161,7 +162,6 @@ Puppet::Type.type(:maven).provide(:mvn) do
       !FileUtils.compare_file @resource[:name], tempfile.path
     else
       if inlocalrepo? tempfile.path
-        debug "inlocalrepo"
         !FileUtils.compare_file @resource[:name], tempfile.path
       else
         true

@@ -79,11 +79,17 @@ Puppet::Type.type(:maven).provide(:mvn) do
     ver =~ /SNAPSHOT$/ || ver == 'LATEST' || ver == 'RELEASE'
   end
 
+  def inlocalrepo? tempfile
+    # try an "offline" maven download
+    status = download tempfile, false, true
+    status == 0
+  end
+
   def create(value)
     download name, value == :latest
   end
 
-  def download(dest, latest)
+  def download(dest, latest, offline = false)
     # Remote repositories to use
     debug "Repositories to use: #{repos.join(', ')}"
 
@@ -97,12 +103,18 @@ Puppet::Type.type(:maven).provide(:mvn) do
       msg = "#{groupid}:#{artifactid}:#{version}:" + (packaging.nil? ? "" : packaging) + ":" + (classifier.nil? ? "" : classifier)
     end
 
-    command_string = command_string + " -U " if updatable? && latest
+    command_string = command_string + " -U " if updatable? && latest unless offline
+    
+    command_string = command_string + " -o " if offline
 
     # set the repoId if specified
     command_string = command_string + " -DrepoId=#{repoid}" unless repoid.nil?
 
-    debug "mvn downloading (if needed) repo file #{msg} to #{dest} from #{repos.join(', ')}"
+    if(offline)
+      debug "mvn copying repo file #{msg} to #{dest} from local repo"
+    else
+      debug "mvn downloading (if needed) repo file #{msg} to #{dest} from #{repos.join(', ')}"
+    end
 
     command = ["mvn org.apache.maven.plugins:maven-dependency-plugin:#{plugin_version}:get #{command_string} -DremoteRepositories=#{repos.join(',')} -Ddest=#{dest} -Dtransitive=false -Ppuppet-maven #{options}"]
 
@@ -123,9 +135,13 @@ Puppet::Type.type(:maven).provide(:mvn) do
     if (status.exitstatus == 1) && (output == '')
       self.fail("mvn returned #{status.exitstatus}: Is Maven installed?")
     end
-    unless status.exitstatus == 0
+
+    # if we are offline, we check by this if the file is yet downloaded
+    if status.exitstatus != 0 && !offline
       self.fail("#{command} returned #{status.exitstatus}: #{output}")
     end
+
+    status.exitstatus
   end
 
   def destroy
@@ -140,10 +156,16 @@ Puppet::Type.type(:maven).provide(:mvn) do
   end
 
   def outdated?
+    tempfile = Tempfile.new 'mvn'
     if updatable?
-      tempfile = Tempfile.new 'mvn'
       download tempfile.path, true
       !FileUtils.compare_file @resource[:name], tempfile.path
+    else
+      if inlocalrepo? tempfile.path
+        !FileUtils.compare_file @resource[:name], tempfile.path
+      else
+        true
+      end
     end
   end
 end

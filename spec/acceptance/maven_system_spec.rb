@@ -1,11 +1,12 @@
-require 'spec_helper_system'
+require 'spec_helper_acceptance'
 
 describe 'maven type' do
   before(:all) do
-    [0,2].should include(puppet_apply(%Q(
+    pp = %Q(
       class { 'java': }
       class { 'maven::maven': }
-     )).exit_code)
+    )
+    apply_manifest(pp, :catch_failures => true)
   end
 
   it 'should be idempotent' do
@@ -17,8 +18,8 @@ describe 'maven type' do
           'http://mirrors.ibiblio.org/pub/mirrors/maven2'],
       }
     )
-    puppet_apply(pp)
-    puppet_apply(pp).exit_code.should be_zero
+    apply_manifest(pp, :catch_failures => true)
+    apply_manifest(pp, :catch_changes => true)
   end
 
   context 'an existing SNAPSHOT artifact' do
@@ -27,15 +28,17 @@ describe 'maven type' do
     let(:repo_version) { 1 }
 
     before(:each) do
-      shell 'rm -rf /var/www/html/repo /root/.m2/repository/org/foo /tmp/touch-me-if-updated'
+      apply_manifest(%Q(
+        package { 'httpd': ensure => 'present' } ->
+        service { 'httpd': ensure => 'running' }
+      ), :catch_failures => true)
 
-      shell 'mkdir -p /var/www/html'
-      fixture_rcp "system/maven/repo-#{repo_version}", '/var/www/html/repo'
+      hosts.each do |host|
+        on(host, 'rm -rf /var/www/html/repo /root/.m2/repository/org/foo /tmp/touch-me-if-updated')
+        fixture_rcp(host, "acceptance/maven/repo-#{repo_version}", '/var/www/html/repo')
+      end
 
-      [0,2].should include(puppet_apply(%Q(
-        package{'httpd': ensure => 'present'} ->
-        service{'httpd': ensure  => 'running' } ->
-
+      apply_manifest(%Q(
         maven { '/tmp/hello.jar':
           ensure => '#{ensure_param}',
           id     => 'org.foo:hello:#{version}',
@@ -43,11 +46,11 @@ describe 'maven type' do
         }
 
         exec{'touch-me':
-          command => '/bin/touch /tmp/touch-me-if-updated',
+          command     => '/bin/touch /tmp/touch-me-if-updated',
           refreshonly => true,
-          subscribe => Maven['/tmp/hello.jar']
+          subscribe   => Maven['/tmp/hello.jar']
         }
-      )).exit_code)
+      ), :catch_failures => true)
     end
 
     describe file('/tmp/hello.jar') do
@@ -61,7 +64,9 @@ describe 'maven type' do
 
       around(:each) do |example|
         #make sure the v1 verson of the SNAPSHOT is on the filesystem
-        fixture_rcp 'system/maven/repo-1/org/foo/hello/0.0.1-SNAPSHOT/hello-0.0.1-20131008.014634-1.jar', '/tmp/hello.jar'
+        hosts.each do |host|
+          fixture_rcp(host, 'acceptance/maven/repo-1/org/foo/hello/0.0.1-SNAPSHOT/hello-0.0.1-20131008.014634-1.jar', '/tmp/hello.jar')
+        end
         example.run
       end
 
@@ -87,7 +92,9 @@ describe 'maven type' do
 
       around(:each) do |example|
         #make sure the v1 verson of the SNAPSHOT is on the filesystem
-        fixture_rcp 'system/maven/repo-1/org/foo/hello/0.0.1-SNAPSHOT/hello-0.0.1-20131008.014634-1.jar', '/tmp/hello.jar'
+        hosts.each do |host|
+          fixture_rcp(host, 'acceptance/maven/repo-1/org/foo/hello/0.0.1-SNAPSHOT/hello-0.0.1-20131008.014634-1.jar', '/tmp/hello.jar')
+        end
         example.run
       end
 

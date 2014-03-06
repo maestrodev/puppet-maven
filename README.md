@@ -29,7 +29,7 @@ If you are developing the module, it can be built using `rake`:
 gem install bundler
 bundle
 rake spec
-rake spec:system
+rake beaker
 ```
 
 Usage

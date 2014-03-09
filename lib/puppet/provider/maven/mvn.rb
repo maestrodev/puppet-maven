@@ -23,15 +23,19 @@ Puppet::Type.type(:maven).provide(:mvn) do
 
   def ensure
     if !exists?
-      :absent
+      value = :absent
     elsif @resource[:ensure] == :latest && !outdated?
-      :latest
+      value =  :latest
     else
-      :present
+      value = :present
+      #value = Digest::MD5.file(@resource[:name]).hexdigest
     end
+    debug "#{@resource[:name]} ensure #{value}"
+    value
   end
 
   def ensure=(value)
+    debug "#{@resource[:name]} ensure = #{value}"
     ([:present, :latest] & [value]).any? ? create(value) : destroy
   end
 
@@ -69,6 +73,7 @@ Puppet::Type.type(:maven).provide(:mvn) do
     end
   end
 
+  # is it a version that automatically updates? (SNAPSHOT, LATEST, RELEASE)
   def updatable?
     if full_id.nil?
       ver = version
@@ -76,13 +81,16 @@ Puppet::Type.type(:maven).provide(:mvn) do
       ver = full_id.split(':')[2]
     end
 
-    ver =~ /SNAPSHOT$/ || ver == 'LATEST' || ver == 'RELEASE'
+    value = ver =~ /SNAPSHOT$/ || ver == 'LATEST' || ver == 'RELEASE'
+    debug "#{@resource[:name]} updatable? #{value}"
+    value
   end
 
   def inlocalrepo? tempfile
     # try an "offline" maven download
-    status = download tempfile, false, true
-    status == 0
+    value = download tempfile, false, true
+    debug "#{@resource[:name]} in local repo? #{value}"
+    value
   end
 
   def create(value)
@@ -103,14 +111,16 @@ Puppet::Type.type(:maven).provide(:mvn) do
       msg = "#{groupid}:#{artifactid}:#{version}:" + (packaging.nil? ? "" : packaging) + ":" + (classifier.nil? ? "" : classifier)
     end
 
-    command_string = command_string + " -U " if updatable? && latest unless offline
-    
-    command_string = command_string + " -o " if offline
+    if offline
+      command_string = command_string + " -o "
+    else
+      command_string = command_string + " -U " if updatable? && latest
+    end
 
     # set the repoId if specified
     command_string = command_string + " -DrepoId=#{repoid}" unless repoid.nil?
 
-    if(offline)
+    if offline
       debug "mvn copying repo file #{msg} to #{dest} from local repo"
     else
       debug "mvn downloading (if needed) repo file #{msg} to #{dest} from #{repos.join(', ')}"
@@ -141,7 +151,7 @@ Puppet::Type.type(:maven).provide(:mvn) do
       self.fail("#{command} returned #{status.exitstatus}: #{output}")
     end
 
-    status.exitstatus
+    status.exitstatus == 0
   end
 
   def destroy
@@ -151,7 +161,6 @@ Puppet::Type.type(:maven).provide(:mvn) do
   end
 
   def exists?
-    # we could check if the file exists in the local repo but Buildr will do that before attempting to download it
     return File.exists?(@resource[:name])
   end
 

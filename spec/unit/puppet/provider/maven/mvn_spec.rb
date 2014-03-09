@@ -143,7 +143,7 @@ describe provider_class do
               should match /-U/
             end
           end
-          
+
           context 'given a precise version' do
             let(:params) do
               {

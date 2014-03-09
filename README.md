@@ -62,7 +62,7 @@ or
    at `path` (or `name` if no path is specified.)  This is probably makes
    sense when the specified maven artifact refers to a released (non-SNAPSHOT)
    artifact.
-*  `latest` -- if value of version is `RELEASE`, `LATEST`, or a SNAPSHOT the repository
+*  `latest` -- if value of version is a specific version, `RELEASE`, `LATEST`, or a SNAPSHOT the repository
    is queried for an updated artifact.  If an updated artifact is found the file
    at `path` is replaced.
 

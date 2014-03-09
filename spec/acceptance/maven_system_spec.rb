@@ -22,6 +22,47 @@ describe 'maven type' do
     apply_manifest(pp, :catch_changes => true)
   end
 
+  context 'when changing the version' do
+    describe file('/tmp/maven-core.jar') do
+
+      before do
+        apply_manifest(%Q(
+          maven { '/tmp/maven-core.jar':
+            id => 'org.apache.maven:maven-core:3.0.5:jar',
+          }
+        ), :catch_failures => true)
+        on(hosts, 'rm -rf /tmp/touch-me-if-updated')
+      end
+
+      it 'should not update to the same version' do
+        should match_md5checksum 'ee0bd82403231f5e268fd85044027221'
+        apply_manifest(%Q(
+          maven { '/tmp/maven-core.jar':
+            id => 'org.apache.maven:maven-core:3.0.5:jar',
+          }
+          exec { 'touch-me':
+            command     => '/bin/touch /tmp/touch-me-if-updated',
+            refreshonly => true,
+            subscribe   => Maven['/tmp/maven-core.jar']
+          }
+        ), :catch_failures => true)
+        should match_md5checksum 'ee0bd82403231f5e268fd85044027221'
+        file('/tmp/touch-me-if-snapshot-updated').should_not be_file
+      end
+
+      it 'should update to a different version' do
+        should match_md5checksum 'ee0bd82403231f5e268fd85044027221'
+        apply_manifest(%Q(
+          maven { '/tmp/maven-core.jar':
+            ensure => 'latest',
+            id     => 'org.apache.maven:maven-core:3.1.0:jar',
+          }
+        ), :catch_failures => true)
+        should match_md5checksum '67c1cd4fa81ff39826826f46e88f420f'
+      end
+    end
+  end
+
   context 'an existing SNAPSHOT artifact' do
     let(:version) { '0.0.1-SNAPSHOT' }
     let(:ensure_param) { 'present' }
@@ -34,7 +75,7 @@ describe 'maven type' do
       ), :catch_failures => true)
 
       hosts.each do |host|
-        on(host, 'rm -rf /var/www/html/repo /root/.m2/repository/org/foo /tmp/touch-me-if-updated')
+        on(host, 'rm -rf /var/www/html/repo /root/.m2/repository/org/foo /tmp/touch-me-if-snapshot-updated')
         fixture_rcp(host, "acceptance/maven/repo-#{repo_version}", '/var/www/html/repo')
       end
 
@@ -45,8 +86,8 @@ describe 'maven type' do
           repos  => 'http://localhost/repo'
         }
 
-        exec{'touch-me':
-          command     => '/bin/touch /tmp/touch-me-if-updated',
+        exec { 'touch-me':
+          command     => '/bin/touch /tmp/touch-me-if-snapshot-updated',
           refreshonly => true,
           subscribe   => Maven['/tmp/hello.jar']
         }
@@ -79,7 +120,7 @@ describe 'maven type' do
           end
         end
 
-        describe file('/tmp/touch-me-if-updated') do
+        describe file('/tmp/touch-me-if-snapshot-updated') do
           it 'should not have been created by subscribe relationship' do
             should_not be_file
           end
@@ -107,7 +148,7 @@ describe 'maven type' do
           end
         end
 
-        describe file('/tmp/touch-me-if-updated') do
+        describe file('/tmp/touch-me-if-snapshot-updated') do
           it 'should not have been created by subscribe relationship' do
             should_not be_file
           end
@@ -123,7 +164,7 @@ describe 'maven type' do
           end
         end
 
-        describe file('/tmp/touch-me-if-updated') do
+        describe file('/tmp/touch-me-if-snapshot-updated') do
           it 'should have been created by subscribe relationship' do
             should be_file
           end

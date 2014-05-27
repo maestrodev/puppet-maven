@@ -219,17 +219,17 @@ describe provider_class do
           end
         end
 
-        it 'should default to root user' do
+        it 'should default to current user' do
           expect(Puppet::Util::Execution).to receive(:execute)
-            .with(anything(), hash_including(:uid => 'root'))
+            .with(anything(), hash_including(:uid => nil))
             .and_return exitstatus
 
           subject
         end
 
-        it 'should default to root group' do
+        it 'should default to current user group' do
           expect(Puppet::Util::Execution).to receive(:execute)
-            .with(anything(), hash_including(:gid => 'root'))
+            .with(anything(), hash_including(:gid => nil))
             .and_return exitstatus
 
           subject

@@ -84,10 +84,10 @@ Puppet::Type.newtype(:maven) do
   end
 
   newparam(:user) do
-    desc "User to run Maven as. Useful to share a local repo and settings.xml. Defaults to root."
+    desc "User to run Maven as. Useful to share a local repo and settings.xml. Defaults to user executing puppet."
   end
   newparam(:group) do
-    desc "Group to run Maven as. Defaults to root."
+    desc "Group to run Maven as. Defaults to group of the user executing puppet."
   end
 
   validate do

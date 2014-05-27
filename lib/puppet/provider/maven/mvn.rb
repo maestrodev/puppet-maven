@@ -50,10 +50,6 @@ Puppet::Type.type(:maven).provide(:mvn) do
   :groupid,
   :repoid].each { |m| define_method(m) { @resource[m] } }
 
-  [:user, :group].each do |m|
-    define_method(m) { @resource[m].nil? || @resource[m].empty? ? 'root' : @resource[m] }
-  end
-
   def full_id
     @resource[:id]
   end
@@ -167,6 +163,7 @@ Puppet::Type.type(:maven).provide(:mvn) do
 
   def outdated?
     tempfile = Tempfile.new 'mvn'
+    FileUtils.chown(user, group, tempfile.path)
     if updatable?
       download tempfile.path, true
       !FileUtils.compare_file @resource[:name], tempfile.path

@@ -167,6 +167,7 @@ Puppet::Type.type(:maven).provide(:mvn) do
 
   def outdated?
     tempfile = Tempfile.new 'mvn'
+    FileUtils.chown(user, group, tempfile)
     if updatable?
       download tempfile.path, true
       !FileUtils.compare_file @resource[:name], tempfile.path

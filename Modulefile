@@ -1,5 +1,5 @@
 name 'maestrodev-maven'
-version '1.1.12'
+version '1.1.13'
 
 author 'maestrodev'
 license 'Apache License, Version 2.0'

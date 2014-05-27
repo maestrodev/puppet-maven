@@ -134,24 +134,25 @@ Puppet::Type.type(:maven).provide(:mvn) do
 
     begin
       Timeout::timeout(timeout) do
-        output, status = Puppet::Util::SUIDManager.run_and_capture(command, user, group)
-        debug output if status.exitstatus == 0
-        debug "Exit status = #{status.exitstatus}"
+        output = Puppet::Util::Execution.execute(command, {:uid => user, :gid => group})
+
+        debug output if output.exitstatus == 0
+        debug "Exit status = #{output.exitstatus}"
       end
     rescue Timeout::Error
       self.fail("Command timed out, increase timeout parameter if needed: #{command}")
     end
 
-    if (status.exitstatus == 1) && (output == '')
-      self.fail("mvn returned #{status.exitstatus}: Is Maven installed?")
+    if (output.exitstatus == 1) && (output == '')
+      self.fail("mvn returned #{output.exitstatus}: Is Maven installed?")
     end
 
     # if we are offline, we check by this if the file is yet downloaded
-    if status.exitstatus != 0 && !offline
-      self.fail("#{command} returned #{status.exitstatus}: #{output}")
+    if output.exitstatus != 0 && !offline
+      self.fail("#{command} returned #{output.exitstatus}: #{output}")
     end
 
-    status.exitstatus == 0
+    output.exitstatus == 0
   end
 
   def destroy

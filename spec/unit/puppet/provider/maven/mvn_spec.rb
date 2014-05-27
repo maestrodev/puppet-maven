@@ -50,12 +50,12 @@ describe provider_class do
 
           context 'and an updated snapshot' do
             before do
-              expect(Puppet::Util::SUIDManager).to receive(:run_and_capture) { |command|
+              expect(Puppet::Util::Execution).to receive(:execute) { |command|
                 command[0] =~ /-Ddest=([^\s]+)/
                 File.open($1, 'w') do |f|
                   f.write 'bar'
                 end
-              }.and_return ['', OpenStruct.new({exitstatus: 0})]
+              }.and_return OpenStruct.new({exitstatus: 0})
             end
 
             it { should equal :present }
@@ -63,12 +63,12 @@ describe provider_class do
 
           context 'and a current snapshot' do
             before do
-              expect(Puppet::Util::SUIDManager).to receive(:run_and_capture) { |command|
+              expect(Puppet::Util::Execution).to receive(:execute) { |command|
                 command[0] =~ /-Ddest=([^\s]+)/
                 File.open($1, 'w') do |f|
                   f.write 'foo'
                 end
-              }.and_return ['', OpenStruct.new({exitstatus: 0})]
+              }.and_return OpenStruct.new({exitstatus: 0})
             end
 
             it { should equal :latest }
@@ -119,9 +119,9 @@ describe provider_class do
           subject do
             command_line = nil
 
-            expect(Puppet::Util::SUIDManager).to receive(:run_and_capture) { |command|
+            expect(Puppet::Util::Execution).to receive(:execute) { |command|
               command_line = command[0]
-            }.and_return [nil, exitstatus]
+            }.and_return exitstatus
             provider_class.new(type.new({ path: path }.merge params)).ensure = ensure_param
             command_line
           end
@@ -197,48 +197,47 @@ describe provider_class do
         let(:path) { '/tmp/blah.txt' }
 
         context 'when mvn returns 1' do
-          let(:exitstatus) { OpenStruct.new exitstatus: 1 }
+          #let(:exitstatus) { OpenStruct.new exitstatus: 1 }
 
           context 'with no output' do
-            let(:output) { '' }
-
+            let(:output) { Puppet::Util::Execution::ProcessOutput.new '', 1 }
             example do
-              expect(Puppet::Util::SUIDManager).to receive(:run_and_capture)
-                .and_return [output, exitstatus]
+              expect(Puppet::Util::Execution).to receive(:execute)
+                .and_return output
               expect { subject }.to raise_error Puppet::Error, /^mvn returned 1: Is Maven installed\?/
             end
           end
 
           context 'with output "busted!"' do
-            let(:output) { 'busted!' }
+            let(:output) { Puppet::Util::Execution::ProcessOutput. new 'busted!', 1 }
 
             example do
-              expect(Puppet::Util::SUIDManager).to receive(:run_and_capture)
-                .and_return [output, exitstatus]
+              expect(Puppet::Util::Execution).to receive(:execute)
+                .and_return output
               expect { subject }.to raise_error Puppet::Error, /returned 1: busted\!/
             end
           end
         end
 
         it 'should default to root user' do
-          expect(Puppet::Util::SUIDManager).to receive(:run_and_capture)
-            .with(anything(), 'root', anything())
-            .and_return [nil, exitstatus]
+          expect(Puppet::Util::Execution).to receive(:execute)
+            .with(anything(), hash_including(:uid => 'root'))
+            .and_return exitstatus
 
           subject
         end
 
         it 'should default to root group' do
-          expect(Puppet::Util::SUIDManager).to receive(:run_and_capture)
-            .with(anything(), anything(), 'root')
-            .and_return [nil, exitstatus]
+          expect(Puppet::Util::Execution).to receive(:execute)
+            .with(anything(), hash_including(:gid => 'root'))
+            .and_return exitstatus
 
           subject
         end
 
         it 'should use no timeout' do
           expect(Timeout).to receive(:timeout).with(0).and_call_original
-          expect(Puppet::Util::SUIDManager).to receive(:run_and_capture).and_return [nil, exitstatus]
+          expect(Puppet::Util::Execution).to receive(:execute).and_return exitstatus
 
           subject
         end
@@ -247,9 +246,9 @@ describe provider_class do
           subject do
             command_line = nil
 
-            expect(Puppet::Util::SUIDManager).to receive(:run_and_capture) { |command|
+            expect(Puppet::Util::Execution).to receive(:execute) { |command|
               command_line = command[0]
-            }.and_return [nil, exitstatus]
+            }.and_return exitstatus
             provider_class.new(type.new({ path: path }.merge params)).ensure = :present
             command_line
           end
@@ -435,13 +434,13 @@ describe provider_class do
 
           it 'should use the given timeout' do
             expect(Timeout).to receive(:timeout).with(1).and_call_original
-            expect(Puppet::Util::SUIDManager).to receive(:run_and_capture).and_return [nil, exitstatus]
+            expect(Puppet::Util::Execution).to receive(:execute).and_return exitstatus
 
             subject
           end
 
           it 'should timeout if mvn takes too long' do
-            expect(Puppet::Util::SUIDManager).to receive(:run_and_capture) do 
+            expect(Puppet::Util::Execution).to receive(:execute) do 
               sleep 2
             end
 
@@ -453,9 +452,9 @@ describe provider_class do
           let(:params) { { user: 'user_test' } }
 
           it 'should use the given user' do
-            expect(Puppet::Util::SUIDManager).to receive(:run_and_capture)
-              .with(anything(), 'user_test', anything())
-              .and_return [nil, exitstatus]
+            expect(Puppet::Util::Execution).to receive(:execute)
+              .with(anything(), hash_including(:uid => 'user_test'))
+              .and_return exitstatus
 
             subject
           end
@@ -465,9 +464,9 @@ describe provider_class do
           let(:params) { { group: 'group_test' } }
 
           it 'should use the given group' do
-            expect(Puppet::Util::SUIDManager).to receive(:run_and_capture)
-              .with(anything(), anything(), 'group_test')
-              .and_return [nil, exitstatus]
+            expect(Puppet::Util::Execution).to receive(:execute)
+              .with(anything(), hash_including(:gid => 'group_test'))
+               .and_return exitstatus
 
             subject
           end

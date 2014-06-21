@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'rspec/its'
 require 'tempfile'
 
 type = Puppet::Type.type(:maven)
@@ -20,7 +21,7 @@ describe provider_class do
       file_path
     end
 
-    its(:exists?) { should be_true }
+    its(:exists?) { should be true }
 
     example do
       expect { subject.ensure = :absent }.to raise_error NotImplementedError
@@ -102,7 +103,7 @@ describe provider_class do
       file_path
     end
 
-    its(:exists?) { should be_false }
+    its(:exists?) { should be false }
   end
 
   describe '#ensure=' do

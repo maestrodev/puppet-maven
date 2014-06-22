@@ -29,8 +29,22 @@ If you are developing the module, it can be built using `rake`:
 gem install bundler
 bundle
 rake spec
+```
+
+### Acceptance tests
+
+Using Puppetlabs Beaker. To run the default Vagrant box in CentOS 6.5 just do
+
+```
 rake beaker
 ```
+
+To run any other box, check the definitions at `spec/acceptance/nodesets`. For instance to run the tests with Docker in CentOS 6.5
+
+```
+BEAKER_set=centos-65-x64-docker rake beaker
+```
+
 
 Usage
 -----

@@ -1,6 +1,5 @@
 require 'puppet'
-require 'beaker-rspec/spec_helper'
-require 'beaker-rspec/helpers/serverspec'
+require 'beaker-rspec'
 
 RSpec.configure do |c|
   # Project root
@@ -14,7 +13,12 @@ RSpec.configure do |c|
   c.before :suite do
     # Install module and dependencies
     # on host, "mkdir -p #{host['distmoduledir']}"
-    install_puppet
+
+    begin
+      on hosts.first, "puppet --version"
+    rescue
+      install_puppet
+    end
 
     hosts.each do |host|
       on host, puppet('module','install','maestrodev-wget','-v 1.0.0'), { :acceptable_exit_codes => [0,1] }

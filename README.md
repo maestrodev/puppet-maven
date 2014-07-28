@@ -1,3 +1,6 @@
+[![Build Status](https://maestro.maestrodev.com/api/v1/projects/9/compositions/60/badge/icon)](https://maestro.maestrodev.com/projects/9/compositions/60)
+
+
 Puppet-Maven
 ============
 

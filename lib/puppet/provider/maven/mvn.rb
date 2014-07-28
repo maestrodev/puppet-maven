@@ -128,27 +128,44 @@ Puppet::Type.type(:maven).provide(:mvn) do
     output = nil
     status = nil
 
+    # The Puppet::Util::Execution.execute method is in Puppet 3.x and does not exist in 2.8.x
+    # but we need this to work on 2.7.x too.
+    if Puppet::Util::Execution.respond_to?(:execute)
+      exec_method = Puppet::Util::Execution.method(:execute)
+      old_api = false
+    else
+      exec_method = Puppet::Util.method(:execute)
+      old_api = true
+    end
+
+    info "old_api: #{old_api.to_s}"
+
     begin
       Timeout::timeout(timeout) do
-        output = Puppet::Util::Execution.execute(command, {:uid => user, :gid => group})
-
-        debug output if output.exitstatus == 0
-        debug "Exit status = #{output.exitstatus}"
+        output = exec_method.call(command, {:uid => user, :gid => group, :failonfail => true})
+        
+        if old_api == true
+          status = (output == '' ? 1 : 0)
+        else
+          status = output.exitstatus
+        end
+        debug output if status == 0
+        debug "Exit status = #{status}"
       end
     rescue Timeout::Error
       self.fail("Command timed out, increase timeout parameter if needed: #{command}")
     end
 
-    if (output.exitstatus == 1) && (output == '')
-      self.fail("mvn returned #{output.exitstatus}: Is Maven installed?")
+    if (status == 1) && (output == '')
+      self.fail("mvn returned #{status}: Is Maven installed?")
     end
 
     # if we are offline, we check by this if the file is yet downloaded
-    if output.exitstatus != 0 && !offline
-      self.fail("#{command} returned #{output.exitstatus}: #{output}")
+    if (status != 0) && !offline
+      self.fail("#{command} returned #{status}: #{output}")
     end
 
-    output.exitstatus == 0
+    status == 0
   end
 
   def destroy

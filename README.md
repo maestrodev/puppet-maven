@@ -1,5 +1,5 @@
 [![Build Status](https://maestro.maestrodev.com/api/v1/projects/9/compositions/60/badge/icon)](https://maestro.maestrodev.com/projects/9/compositions/60)
-
+[![Build Status](https://travis-ci.org/maestrodev/puppet-maven.svg?branch=master)](https://travis-ci.org/maestrodev/puppet-maven)
 
 Puppet-Maven
 ============

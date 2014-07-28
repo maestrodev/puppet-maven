@@ -191,7 +191,7 @@ DEPENDENCIES
   docker-api
   librarian-puppet (>= 1.0.0)
   minitest (< 5.0.0)
-  puppet
+  puppet (>= 2.7.16)
   puppet-blacksmith (>= 1.0.5)
   puppet-lint
   puppetlabs_spec_helper

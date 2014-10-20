@@ -66,7 +66,7 @@
 #   password, #optional
 #   nonProxyHosts #optional
 # },...]
-define maven::settings( $home = undef, $user = 'root',
+define maven::settings( $home = undef, $user = 'root', $group = 'root',
   $servers = [], $mirrors = [], $default_repo_config = undef, $repos = [],
   $properties = {}, $local_repo = '', $proxies=[]) {
 
@@ -83,10 +83,12 @@ define maven::settings( $home = undef, $user = 'root',
   file { "${home_real}/.m2":
     ensure => directory,
     owner  => $user,
+    group  => $group,
     mode   => '0700',
   } ->
   file { "${home_real}/.m2/settings.xml":
     owner   => $user,
+    group   => $group,
     mode    => '0600',
     content => template('maven/settings.xml.erb'),
   }

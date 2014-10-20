@@ -16,7 +16,7 @@
 #
 # A puppet recipe to set the contents of the .mavenrc file
 #
-define maven::environment( $user, $home = undef, $maven_opts = '', $maven_path_additions = '', $mavenrc_additions = '' ) {
+define maven::environment( $user, $group = 'root', $home = undef, $maven_opts = '', $maven_path_additions = '', $mavenrc_additions = '' ) {
 
   if $home == undef {
     $home_real = $user ? {
@@ -31,6 +31,7 @@ define maven::environment( $user, $home = undef, $maven_opts = '', $maven_path_a
   file { "$home_real/.mavenrc":
     mode    => '0600',
     owner   => $user,
+    group   => $group,
     content => template('maven/mavenrc.erb'),
   }
 }

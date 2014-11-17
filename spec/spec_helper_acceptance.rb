@@ -21,7 +21,6 @@ RSpec.configure do |c|
     end
 
     hosts.each do |host|
-      on host, puppet('module','install','maestrodev-wget','-v 1.0.0'), { :acceptable_exit_codes => [0,1] }
       on host, puppet('module','install','puppetlabs-java','-v 1.0.1'), { :acceptable_exit_codes => [0,1] }
     end
     puppet_module_install(:source => proj_root, :module_name => 'maven')

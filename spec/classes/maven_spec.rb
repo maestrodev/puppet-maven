@@ -27,14 +27,15 @@ describe 'maven::maven' do
     end
   end
 
-  context "when installing maven from os package repository" do
+  context "when installing maven from os package repository", :compile do
     let(:params) { {
-      :system_package => 'maven-package'
+      :system_package => 'maven-package',
+      :version => 'present'
     } }
 
     it 'should contain package resource' do
       should contain_package('maven-package').with(
-        :ensure => '3.0.5'
+        :ensure => 'present'
       )
     end
 
@@ -47,7 +48,7 @@ describe 'maven::maven' do
     end
   end
 
-  context "when not managing symlink" do
+  context "when not managing symlink", :compile do
     let(:params) { {
       :manage_symlink => false
     } }
@@ -58,7 +59,7 @@ describe 'maven::maven' do
     end
   end
 
-  context "when managing custom symlink" do
+  context "when managing custom symlink", :compile do
     let(:params) { {
       :symlink_target => '/custom/bin/mvn'
     } }

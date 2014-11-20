@@ -86,8 +86,7 @@ class maven::maven(
     }
     file { '/usr/bin/mvn':
       ensure  => link,
-      target  => $symlink_target_real,
-      require => Exec['install_maven'],
+      target  => $symlink_target_real
     } ->
     file { '/usr/local/bin/mvn':
       ensure  => absent,

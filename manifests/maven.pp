@@ -20,6 +20,15 @@
 #   - $version:
 #         Maven version.
 #
+#   - $manage_symlink:
+#         If symlink should be managed
+#
+#   - $system_package:
+#         Name of system package to install. False to install with wget / tar
+#
+#   - $symlink_target:
+#         Optional alternative path to mvn cmd
+#
 # Requires:
 #   Java package installed.
 #
@@ -30,48 +39,58 @@
 #
 class maven::maven(
   $version = '3.0.5',
+  $manage_symlink = true,
+  $system_package = false,
+  $symlink_target = undef,
   $repo = {
     #url      => 'http://repo1.maven.org/maven2',
     #username => '',
     #password => '',
   } ) {
 
-  $archive = "/tmp/apache-maven-${version}-bin.tar.gz"
-
-  # Avoid redownloading when tmp tar.gz is deleted
-  if $::maven_version != $version {
-
-    # we could use puppet-stdlib function !empty(repo) but avoiding adding a new
-    # dependency for now
+  if $system_package {
+    package { $system_package:
+      ensure  => $version
+    } ->
+    File <| title == '/usr/bin/mvn' |>
+  } else {
     if "x${repo['url']}x" != 'xx' {
-      wget::authfetch { 'fetch-maven':
-        source      => "${repo['url']}/org/apache/maven/apache-maven/$version/apache-maven-${version}-bin.tar.gz",
-        destination => $archive,
-        user        => $repo['username'],
-        password    => $repo['password'],
-        before      => Exec['maven-untar'],
-      }
+      $repo_url = "${repo['url']}/org/apache/maven/apache-maven/${version}/apache-maven-${version}-bin.tar.gz"
     } else {
-      wget::fetch { 'fetch-maven':
-        source      => "http://archive.apache.org/dist/maven/binaries/apache-maven-${version}-bin.tar.gz",
-        destination => $archive,
-        before      => Exec['maven-untar'],
+      $repo_url = "http://archive.apache.org/dist/maven/binaries/apache-maven-${version}-bin.tar.gz"
+    }
+    if !defined(Package['wget']) {
+      package { 'wget':
+        ensure  => present
       }
     }
-    exec { 'maven-untar':
-      command => "tar xf /tmp/apache-maven-${version}-bin.tar.gz",
-      cwd     => '/opt',
-      creates => "/opt/apache-maven-${version}",
-      path    => ['/bin','/usr/bin'],
+    if "x${repo['username']}x" != 'xx' and "x${repo['password']}x" != 'xx' {
+      $wget_login = "--user=\"${repo['username']}\" --password=\"${repo['password']}\" "
+    } else {
+      $wget_login = ''
     }
+    exec { 'install_maven':
+      command => "wget -O - ${wget_login}${repo_url} | tar zxf -",
+      cwd     => '/opt',
+      path    => ['/usr/local/bin', '/usr/bin', '/bin'],
+      creates => "/opt/apache-maven-${version}",
+      require => Package['wget']
+    } ->
+    File <| title == '/usr/bin/mvn' |>
+  }
 
+  if $manage_symlink {
+    $symlink_target_real = $symlink_target ? {
+      undef   => "/opt/apache-maven-${version}/bin/mvn",
+      default => $symlink_target
+    }
     file { '/usr/bin/mvn':
       ensure  => link,
-      target  => "/opt/apache-maven-${version}/bin/mvn",
-      require => Exec['maven-untar'],
+      target  => $symlink_target_real
     } ->
     file { '/usr/local/bin/mvn':
       ensure  => absent,
     }
   }
+
 }

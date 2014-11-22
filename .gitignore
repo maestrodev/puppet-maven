@@ -12,3 +12,4 @@ doc/
 .vagrant/
 tmp
 .rspec_system
+.bundle/

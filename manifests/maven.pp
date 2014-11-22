@@ -85,8 +85,8 @@ class maven::maven(
       default => $symlink_target
     }
     file { '/usr/bin/mvn':
-      ensure  => link,
-      target  => $symlink_target_real
+      ensure => link,
+      target => $symlink_target_real
     } ->
     file { '/usr/local/bin/mvn':
       ensure  => absent,

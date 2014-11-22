@@ -45,7 +45,7 @@ class maven::maven(
     # dependency for now
     if "x${repo['url']}x" != 'xx' {
       wget::authfetch { 'fetch-maven':
-        source      => "${repo['url']}/org/apache/maven/apache-maven/$version/apache-maven-${version}-bin.tar.gz",
+        source      => "${repo['url']}/org/apache/maven/apache-maven/${version}/apache-maven-${version}-bin.tar.gz",
         destination => $archive,
         user        => $repo['username'],
         password    => $repo['password'],

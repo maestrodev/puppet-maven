@@ -28,7 +28,7 @@ define maven::environment( $user, $group = 'root', $home = undef, $maven_opts = 
     $home_real = $home
   }
 
-  file { "$home_real/.mavenrc":
+  file { "${home_real}/.mavenrc":
     mode    => '0600',
     owner   => $user,
     group   => $group,

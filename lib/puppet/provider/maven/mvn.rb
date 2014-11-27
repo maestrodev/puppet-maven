@@ -90,6 +90,7 @@ Puppet::Type.type(:maven).provide(:mvn) do
   end
 
   def create(value)
+    debug "create #{name}"
     download name, value == :latest
   end
 
@@ -130,6 +131,7 @@ Puppet::Type.type(:maven).provide(:mvn) do
 
     begin
       Timeout::timeout(timeout) do
+        debug command
         output = Puppet::Util::Execution.execute(command, {:uid => user, :gid => group})
 
         debug output if output.exitstatus == 0
@@ -168,11 +170,14 @@ Puppet::Type.type(:maven).provide(:mvn) do
       download tempfile.path, true
       !FileUtils.compare_file @resource[:name], tempfile.path
     else
-      if inlocalrepo? tempfile.path
-        !FileUtils.compare_file @resource[:name], tempfile.path
+      localpath = "/root/.m2/repository/#{groupid.nil? ? '' : groupid.gsub('.', '/') + '/'}#{artifactid}/#{version}/#{artifactid}-#{version}#{classifier.nil? || classifier == '' ? '' : '-' + classifier}.#{packaging.nil? ? 'jar' : packaging}"
+      debug "Path to localrepo #{localpath}"
+      if File.exists? localpath
+        !FileUtils.compare_file @resource[:name], localpath
       else
         true
       end
     end
   end
+
 end

@@ -68,7 +68,7 @@
 # },...]
 define maven::settings( $home = undef, $user = 'root',
   $servers = [], $mirrors = [], $default_repo_config = undef, $repos = [],
-  $properties = {}, $local_repo = '', $proxies=[]) {
+  $properties = {}, $local_repo = '', $proxies=[], $repo_mode = '0700') {
 
   if $home == undef {
     $home_real = $user ? {
@@ -83,7 +83,7 @@ define maven::settings( $home = undef, $user = 'root',
   file { "${home_real}/.m2":
     ensure => directory,
     owner  => $user,
-    mode   => '0700',
+    mode   => $repo_mode,
   } ->
   file { "${home_real}/.m2/settings.xml":
     owner   => $user,

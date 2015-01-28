@@ -1,0 +1,9 @@
+Gemfile:
+  puppet_version: '>= 3.0'
+spec/spec_helper_acceptance.rb:
+  modules:
+    - name: maestrodev-wget
+      version: 1.0.0
+      osfamily: RedHat
+    - name: puppetlabs-java
+      version: 1.0.1

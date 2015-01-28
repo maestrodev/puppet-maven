@@ -25,11 +25,11 @@
 #
 # Sample Usage:
 #   class {'maven::maven':
-#     version => "3.0.5",
+#     version => "3.2.5",
 #   }
 #
 class maven::maven(
-  $version = '3.0.5',
+  $version = '3.2.5',
   $repo = {
     #url      => 'http://repo1.maven.org/maven2',
     #username => '',
@@ -53,7 +53,7 @@ class maven::maven(
       }
     } else {
       wget::fetch { 'fetch-maven':
-        source      => "http://archive.apache.org/dist/maven/binaries/apache-maven-${version}-bin.tar.gz",
+        source      => "http://archive.apache.org/dist/maven/maven-3/${version}/binaries/apache-maven-${version}-bin.tar.gz",
         destination => $archive,
         before      => Exec['maven-untar'],
       }

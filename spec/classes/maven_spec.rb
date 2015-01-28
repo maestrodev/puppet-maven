@@ -6,7 +6,7 @@ describe 'maven::maven' do
 
   context "when downloading maven", :compile do
     it do should contain_wget__fetch('fetch-maven').with(
-        'source'      => 'http://archive.apache.org/dist/maven/binaries/apache-maven-3.0.5-bin.tar.gz',
+        'source'      => 'http://archive.apache.org/dist/maven/maven-3/3.2.5/binaries/apache-maven-3.2.5-bin.tar.gz',
         'user'        => nil,
         'password'    => nil
     ) end
@@ -23,7 +23,7 @@ describe 'maven::maven' do
 
     it 'should fetch maven with username and password' do
       should contain_wget__authfetch('fetch-maven').with(
-        'source'      => 'http://repo1.maven.org/maven2/org/apache/maven/apache-maven/3.0.5/apache-maven-3.0.5-bin.tar.gz',
+        'source'      => 'http://repo1.maven.org/maven2/org/apache/maven/apache-maven/3.2.5/apache-maven-3.2.5-bin.tar.gz',
         'user'        => 'u',
         'password'    => 'p')
     end
@@ -32,7 +32,7 @@ describe 'maven::maven' do
   context "when maven was already installed" do
 
     context "in the same version", :compile do
-      let(:facts) {super().merge({ :maven_version => '3.0.5' })}
+      let(:facts) {super().merge({ :maven_version => '3.2.5' })}
       it { should_not contain_wget__fetch('fetch-maven') }
       it { should_not contain_exec('maven-untar') }
     end

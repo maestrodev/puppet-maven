@@ -62,7 +62,7 @@ or
   maven { "/tmp/myfile":
     groupid => "org.apache.maven",
     artifactid => "maven-core",
-    version => "3.0.5",
+    version => "3.2.5",
     packaging => "jar",
     classifier => "sources",
     repos => ["id::layout::http://repo.acme.com","http://repo2.acme.com"],
@@ -118,7 +118,7 @@ Examples
 
   # Install Maven
   class { "maven::maven":
-    version => "3.0.5", # version to install
+    version => "3.2.5", # version to install
     # you can get Maven tarball from a Maven repository instead than from Apache servers, optionally with a user/password
     repo => {
       #url => "http://repo.maven.apache.org/maven2",
@@ -156,15 +156,15 @@ Downloading artifacts
 ---------------------
 
 ```puppet
-  maven { "/tmp/maven-core-3.0.5.jar":
-    id => "org.apache.maven:maven-core:3.0.5:jar",
+  maven { "/tmp/maven-core-3.2.5.jar":
+    id => "org.apache.maven:maven-core:3.2.5:jar",
     repos => ["central::default::http://repo.maven.apache.org/maven2","http://mirrors.ibiblio.org/pub/mirrors/maven2"],
   }
 
-  maven { "/tmp/maven-core-3.0.5-sources.jar":
+  maven { "/tmp/maven-core-3.2.5-sources.jar":
     groupid    => "org.apache.maven",
     artifactid => "maven-core",
-    version    => "3.0.5",
+    version    => "3.2.5",
     classifier => "sources",
   }
 ```

@@ -28,7 +28,7 @@
 #
 # Sample Usage:
 #   class {'maven':
-#     version => "3.0.5",
+#     version => "3.2.5",
 #   }
 #
 class maven() {

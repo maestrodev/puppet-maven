@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe 'maven::maven' do
   let(:title) { 'maven' }
+  let(:facts) {{ :http_proxy => '', :maven_version => '' }}
 
   context "when downloading maven", :compile do
     it do should contain_wget__fetch('fetch-maven').with(
@@ -31,13 +32,13 @@ describe 'maven::maven' do
   context "when maven was already installed" do
 
     context "in the same version", :compile do
-      let(:facts) {{ :maven_version => '3.0.5' }}
+      let(:facts) {super().merge({ :maven_version => '3.0.5' })}
       it { should_not contain_wget__fetch('fetch-maven') }
       it { should_not contain_exec('maven-untar') }
     end
 
     context "in a different version", :compile do
-      let(:facts) {{ :maven_version => '3.0.4' }}
+      let(:facts) {super().merge({ :maven_version => '3.0.4' })}
       it { should contain_wget__fetch('fetch-maven') }
       it { should contain_exec('maven-untar') }
     end

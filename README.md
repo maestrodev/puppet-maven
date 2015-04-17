@@ -139,7 +139,7 @@ Examples
   # Create a settings.xml with the repo credentials
   maven::settings { 'maven-user-settings' :
     mirrors => [$central], # mirrors entry in settings.xml, uses id, url, mirrorof from the hash passed
-    servers => [$central], # servers entry in settings.xml, uses id, username, password from the hash passed
+    servers => [$central], # servers entry in settings.xml, uses id, username, password from the hash passed, privateKey
     proxies => [$proxy], # proxies entry in settings.xml, active, protocol, host, username, password, nonProxyHosts
     user    => 'maven',
   }

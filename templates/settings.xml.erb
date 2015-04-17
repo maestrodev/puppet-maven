@@ -22,8 +22,14 @@
 <% @servers.each do |server| -%>
     <server>
       <id><%= server['id'] %></id>
+<% ['username', 'password','privateKey' ] -%>
       <username><%= server['username'] %></username>
+<% unless server['password'].nil? -%>
       <password><%= server['password'] %></password>
+<% end -%>
+<% unless server['privateKey'].nil? -%>
+      <privateKey><%= server['privateKey'] %></privateKey>
+<% end -%>
     </server>
 <% end -%>
   </servers>

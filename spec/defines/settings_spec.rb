@@ -36,6 +36,11 @@ describe "maven::settings" do
     'username' => 'deploy_user',
     'password' => 'deploy_pass',
   }}
+  let(:deploy_server_with_ssh) {{
+    'id' => 'maestro-deploy-ssh',
+    'username' => 'deploy_ssh_user',
+    'privateKey' => '~/.ssh/id_rsa',
+  }}
   let(:default_repo_config) {{
     'url' => url,
     'snapshots' => {
@@ -84,7 +89,7 @@ describe "maven::settings" do
           :user => "u",
           :home => "/home/u",
           :mirrors => [mirror],
-          :servers => [mirror_server, deploy_server]
+          :servers => [mirror_server, deploy_server, deploy_server_with_ssh]
       }}
 
     it_behaves_like :maven_settings, "mirror-servers-settings.xml"
@@ -147,7 +152,7 @@ describe "maven::settings" do
           :user => "u",
           :home => "/home/u",
           :mirrors => [mirror],
-          :servers => [mirror_server, deploy_server],
+          :servers => [mirror_server, deploy_server, deploy_server_with_ssh],
           :default_repo_config => default_repo_config,
           :properties => properties,
           :local_repo => "/var/cache/maven/repository",

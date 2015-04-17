@@ -22,6 +22,11 @@
       <username>deploy_user</username>
       <password>deploy_pass</password>
     </server>
+    <server>
+      <id>maestro-deploy-ssh</id>
+      <username>deploy_ssh_user</username>
+      <privateKey>~/.ssh/id_rsa</privateKey>
+    </server>
   </servers>
 
   <profiles>

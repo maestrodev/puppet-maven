@@ -58,6 +58,13 @@ class maven::maven(
         before      => Exec['maven-untar'],
       }
     }
+
+    if ! defined(File['/opt']) {
+      file { '/opt':
+        ensure  => directory,
+      }
+    }
+
     exec { 'maven-untar':
       command => "tar xf /tmp/apache-maven-${version}-bin.tar.gz",
       cwd     => '/opt',

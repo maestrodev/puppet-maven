@@ -32,7 +32,7 @@ class maven::configure(
     create_resources('maven::settings', $settings)
   }
 
-  if $settings != undef {
+  if $environments != undef {
     create_resources('maven::environment', $environments)
   }
 

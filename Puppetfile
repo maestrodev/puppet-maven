@@ -1,3 +1,3 @@
-forge 'http://forgeapi.puppetlabs.com'
+forge 'http://forge.puppetlabs.com'
 
 mod 'maestrodev/wget',     '>=1.0.0'

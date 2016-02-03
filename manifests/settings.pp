@@ -68,7 +68,7 @@
 # },...]
 define maven::settings( $home = undef, $user = 'root', $group = 'root',
   $servers = [], $mirrors = [], $default_repo_config = undef, $repos = [],
-  $properties = {}, $local_repo = '', dir_mask = '700', file_mask = '600',
+  $properties = {}, $local_repo = '', $dir_mask = '700', $file_mask = '600',
   $proxies=[]) {
 
   if $home == undef {

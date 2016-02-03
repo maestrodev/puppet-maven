@@ -259,7 +259,7 @@ describe provider_class do
           end
 
           it 'should default to plugin version 2.4' do
-            should match /mvn org\.apache\.maven\.plugins:maven-dependency-plugin:2\.4:get/
+            should match /mvn -B org\.apache\.maven\.plugins:maven-dependency-plugin:2\.4:get/
           end
 
           it 'should pass no repoId' do
@@ -400,7 +400,7 @@ describe provider_class do
             let(:params) { { pluginversion: '2.5' } }
 
             it 'should pass provided version' do
-              should match /mvn org\.apache\.maven\.plugins:maven-dependency-plugin:2\.5:get/
+              should match /mvn -B org\.apache\.maven\.plugins:maven-dependency-plugin:2\.5:get/
             end
           end
 

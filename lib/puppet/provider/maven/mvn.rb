@@ -21,8 +21,6 @@ Puppet::Type.type(:maven).provide(:mvn) do
   desc "Maven download using mvn command line."
   include Puppet::Util::Execution
 
-  debug "Ekumen version"
-
   def ensure
     if !exists?
       value = :absent

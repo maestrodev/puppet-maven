@@ -89,6 +89,9 @@ Puppet::Type.newtype(:maven) do
   newparam(:group) do
     desc "Group to run Maven as. Defaults to group of the user executing puppet."
   end
+  newparam(:transitive) do
+    desc "Whether to resolve transitive dependencies. Defaults to false."
+  end
 
   validate do
     full_id = self[:id]
@@ -97,6 +100,7 @@ Puppet::Type.newtype(:maven) do
     version = self[:version]
     packaging = self[:packaging]
     classifier = self[:classifier]
+    transitive = self[:transitive]
 
     using_detailed_parameters = !groupid.nil? || !artifactid.nil? || !version.nil? || !packaging.nil? || !classifier.nil?
     if (!full_id.nil? && using_detailed_parameters)

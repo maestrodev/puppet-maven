@@ -5,6 +5,39 @@
   <localRepository><%= @local_repo %></localRepository>
 
 <%- end -%>
+
+<% unless @repositories.empty? -%>
+    <repositories>
+<% @repositories.each do |repository| -%>
+      <repository>
+        <id><%= repository['id'] %></id>
+        <name><%= repository['name'] %></name>
+        <%- if(repository['layout'].nil?) -%>
+        <layout>default</layout>
+        <%- else -%>
+        <layout><%= repository['layout'] %></layout>
+        <%- end -%>
+        <url><%= repository['url'] %></url>
+        <%- unless repository['snapshots'].nil? or repository['snapshots'].empty? -%>
+        <snapshots>
+          <%- repository['snapshots'].sort.each { |key,value| -%>
+          <%=  "<#{key}>#{value}</#{key}>" %>
+          <%- } -%>
+        </snapshots>                    
+        <%- end -%>
+        <%- unless repository['releases'].nil? or repository['releases'].empty? -%>
+        <releases>
+          <%- repository['releases'].sort.each { |key,value| -%>
+          <%=  "<#{key}>#{value}</#{key}>" %>
+          <%- } -%>
+        </releases>
+        <%- end -%>
+      </repository>
+<% end -%>
+
+    </repositories>
+
+<%- end -%>
 <% unless @mirrors.empty? -%>
   <mirrors>
 <% @mirrors.each do |mirror| -%>

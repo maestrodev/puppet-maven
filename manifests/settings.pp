@@ -70,7 +70,7 @@
 # profiles => {
 # 'profile1' => { # <- this becomes the profile id
 #   'activation' => {
-#     'active_by_default' => false,
+#     'activeByDefault' => false,
 #     'jdk' => '1.5',
 #     'os' => {
 #       'name' => 'Windows XP',

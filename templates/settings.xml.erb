@@ -152,8 +152,8 @@
       <id><%= profile_id %></id>
       <%- unless profile['activation'].empty?; activation = profile['activation'] -%>
       <activation>
-        <%- if activation.key?('active_by_default') -%>
-        <activeByDefault><%= activation['active_by_default'] %></activeByDefault>
+        <%- if activation.key?('activeByDefault') -%>
+        <activeByDefault><%= activation['activeByDefault'] %></activeByDefault>
         <%- end -%>
         <%- if activation.key?('jdk') -%>
         <jdk><%= activation['jdk'] %></jdk>

@@ -54,7 +54,7 @@ describe "maven::settings" do
   let(:profiles) {{
     'profile1' => {
       'activation' => {
-        'active_by_default' => false,
+        'activeByDefault' => false,
         'jdk' => '1.5',
         'os' => {
           'name' => 'Windows XP',

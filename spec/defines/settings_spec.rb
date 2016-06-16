@@ -51,6 +51,68 @@ describe "maven::settings" do
         'checksumPolicy' => 'fail',
     }
   }}
+  let(:profiles) {{
+    'profile1' => {
+      'activation' => {
+        'active_by_default' => false,
+        'jdk' => '1.5',
+        'os' => {
+          'name' => 'Windows XP',
+          'family' => 'Windows',
+          'arch' => 'x86',
+          'version' => '5.1.2600'
+        },
+        'property' => {
+          'name' => 'mavenVersion',
+          'value' => '2.0.3'
+        },
+        'file' => {
+          'exists' => '${basedir}/file2.properties',
+          'missing' => '${basedir}/file1.properties'
+        }
+      },
+      'repositories' => {
+        'codehausSnapshots' => {
+          'name' => 'Codehaus Snapshots',
+          'releases' => {
+            'enabled' => false,
+            'updatePolicy' => 'always',
+            'checksumPolicy' => 'warn'
+          },
+          'snapshots' => {
+            'enabled' => true,
+            'updatePolicy' => 'never',
+            'checksumPolicy' => 'fail'
+          },
+          'url' => 'http://snapshots.maven.codehaus.org/maven2',
+          'layout' => 'default'
+        }
+      },
+      'plugin_repositories' => {
+        'codehausSnapshots' => {
+          'name' => 'Codehaus Snapshots',
+          'releases' => {
+            'enabled' => false,
+            'update_policy' => 'always',
+            'checksum_policy' => 'warn'
+          },
+          'snapshots' => {
+            'enabled' => true,
+            'updatePolicy' => 'never',
+            'checksumPolicy' => 'fail'
+          },
+          'url' => 'http://snapshots.maven.codehaus.org/maven2',
+          'layout' => 'default'
+        }
+      },
+      'properties' => {
+          'key1' => 'value1'
+      }
+    }
+  }}
+  let(:active_profiles) {
+    ['profile1', 'profile2']
+  }
   let(:proxy) {{
     'active' => true,
     'protocol' => 'http',
@@ -159,5 +221,25 @@ describe "maven::settings" do
       }}
 
     it_behaves_like :maven_settings, "complete-settings.xml"
+  end
+
+  context "with profiles", :compile do
+    let(:params) {{
+          :user => "u",
+          :home => "/home/u",
+          :profiles => profiles
+      }}
+
+    it_behaves_like :maven_settings, "profiles-settings.xml"
+  end
+
+  context "with active_profiles", :compile do
+    let(:params) {{
+          :user => "u",
+          :home => "/home/u",
+          :active_profiles => active_profiles
+      }}
+
+    it_behaves_like :maven_settings, "active-profiles-settings.xml"
   end
 end

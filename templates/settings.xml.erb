@@ -73,7 +73,7 @@
     @repos << @default_repo_config
   end
 -%>
-<% unless @repos.empty? and @properties.empty? -%>
+<% unless @repos.empty? and @properties.empty? and @profiles.empty? -%>
   <profiles>
     <%- unless @repos.empty? -%>
     <profile>
@@ -146,7 +146,128 @@
       </properties>
     </profile>
     <%- end -%>
+    <%- unless @profiles.empty? -%>
+    <%- @profiles.each do |profile_id, profile| -%>
+    <profile>
+      <id><%= profile_id %></id>
+      <%- unless profile['activation'].empty?; activation = profile['activation'] -%>
+      <activation>
+        <%- if activation.key?('activeByDefault') -%>
+        <activeByDefault><%= activation['activeByDefault'] %></activeByDefault>
+        <%- end -%>
+        <%- if activation.key?('jdk') -%>
+        <jdk><%= activation['jdk'] %></jdk>
+        <%- end -%>
+        <%- unless activation['os'].empty?; os = activation['os'] -%>
+        <os>
+          <%- if os.key?('name') -%>
+          <name><%= os['name'] %></name>
+          <%- end -%>
+          <%- if os.key?('family') -%>
+          <family><%= os['family'] %></family>
+          <%- end -%>
+          <%- if os.key?('arch') -%>
+          <arch><%= os['arch'] %></arch>
+          <%- end -%>
+          <%- if os.key?('version') -%>
+          <version><%= os['version'] %></version>
+          <%- end -%>
+        </os>
+        <%- end -%>
+        <%- unless activation['property'].empty?; property = activation['property'] -%>
+        <property>
+          <name><%= property['name'] %></name>
+          <value><%= property['value'] %></value>
+        </property>
+        <%- end -%>
+        <%- unless activation['file'].empty?; file = activation['file'] -%>
+        <file>
+          <%- if file.key?('exists') -%>
+          <exists><%= file['exists'] %></exists>
+          <%- end -%>
+          <%- if file.key?('missing') -%>
+          <missing><%= file['missing'] %></missing>
+          <%- end -%>
+        </file>
+        <%- end -%>
+      </activation>
+      <%- end -%>
+      <%- unless profile['repositories'].empty?; repositories = profile['repositories'] -%>
+      <repositories>
+        <%- repositories.each do |repo_id, repo| -%>
+        <repository>
+          <id><%= repo_id %></id>
+          <%- unless repo['releases'].empty? -%>
+          <releases>
+            <%- repo['releases'].sort.each { |key,value| -%>
+            <%=  "<#{key}>#{value}</#{key}>" %>
+            <%- } -%>
+          </releases>
+          <%- end -%>
+          <%- unless repo['snapshots'].empty? -%>
+          <snapshots>
+            <%- repo['snapshots'].sort.each { |key,value| -%>
+            <%=  "<#{key}>#{value}</#{key}>" %>
+            <%- } -%>
+          </snapshots>
+          <%- end -%>
+          <%- if repo['url'] -%>
+          <url><%= repo['url'] %></url>
+          <%- end -%>
+          <%- if repo['layout'] -%>
+          <layout><%= repo['layout'] %></layout>
+          <%- end -%>
+        </repository>
+        <%- end -%>
+      </repositories>
+      <%- end -%>
+      <%- unless profile['plugin_repositories'].empty?; repositories = profile['repositories'] -%>
+      <pluginRepositories>
+        <%- repositories.each do |repo_id, repo| -%>
+        <repository>
+          <id><%= repo_id %></id>
+          <%- unless repo['releases'].empty? -%>
+          <releases>
+            <%- repo['releases'].sort.each { |key,value| -%>
+            <%=  "<#{key}>#{value}</#{key}>" %>
+            <%- } -%>
+          </releases>
+          <%- end -%>
+          <%- unless repo['snapshots'].empty? -%>
+          <snapshots>
+            <%- repo['snapshots'].sort.each { |key,value| -%>
+            <%=  "<#{key}>#{value}</#{key}>" %>
+            <%- } -%>
+          </snapshots>
+          <%- end -%>
+          <%- if repo['url'] -%>
+          <url><%= repo['url'] %></url>
+          <%- end -%>
+          <%- if repo['layout'] -%>
+          <layout><%= repo['layout'] %></layout>
+          <%- end -%>
+        </repository>
+        <%- end -%>
+      </pluginRepositories>
+      <%- end -%>
+      <%- unless profile['properties'].empty? -%>
+      <properties>
+        <%- profile['properties'].sort.each { |key, value| -%>
+        <%=  "<#{key}>#{value}</#{key}>" %>
+        <%- } -%>
+      </properties>
+      <%- end -%>
+    </profile>
+    <%- end -%>
+    <%- end -%>
   </profiles>
 
 <% end -%>
+  <%- unless @active_profiles.empty? -%>
+  <activeProfiles>
+    <%- @active_profiles.sort.each { |profile| -%>
+    <activeProfile><%= profile %></activeProfile>
+    <%- } -%>
+  </activeProfiles>
+  <%- end -%>
 </settings>

@@ -1,0 +1,65 @@
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+
+  <profiles>
+    <profile>
+      <id>profile1</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+        <jdk>1.5</jdk>
+        <os>
+          <name>Windows XP</name>
+          <family>Windows</family>
+          <arch>x86</arch>
+          <version>5.1.2600</version>
+        </os>
+        <property>
+          <name>mavenVersion</name>
+          <value>2.0.3</value>
+        </property>
+        <file>
+          <exists>${basedir}/file2.properties</exists>
+          <missing>${basedir}/file1.properties</missing>
+        </file>
+      </activation>
+      <repositories>
+        <repository>
+          <id>codehausSnapshots</id>
+          <releases>
+            <checksumPolicy>warn</checksumPolicy>
+            <enabled>false</enabled>
+            <updatePolicy>always</updatePolicy>
+          </releases>
+          <snapshots>
+            <checksumPolicy>fail</checksumPolicy>
+            <enabled>true</enabled>
+            <updatePolicy>never</updatePolicy>
+          </snapshots>
+          <url>http://snapshots.maven.codehaus.org/maven2</url>
+          <layout>default</layout>
+        </repository>
+      </repositories>
+      <pluginRepositories>
+        <repository>
+          <id>codehausSnapshots</id>
+          <releases>
+            <checksumPolicy>warn</checksumPolicy>
+            <enabled>false</enabled>
+            <updatePolicy>always</updatePolicy>
+          </releases>
+          <snapshots>
+            <checksumPolicy>fail</checksumPolicy>
+            <enabled>true</enabled>
+            <updatePolicy>never</updatePolicy>
+          </snapshots>
+          <url>http://snapshots.maven.codehaus.org/maven2</url>
+          <layout>default</layout>
+        </repository>
+      </pluginRepositories>
+      <properties>
+        <key1>value1</key1>
+      </properties>
+    </profile>
+  </profiles>
+
+</settings>

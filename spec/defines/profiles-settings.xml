@@ -24,41 +24,46 @@
       </activation>
       <repositories>
         <repository>
-          <id>codehausSnapshots</id>
+          <id>repo1</id>
+          <name>First Repo</name>
           <releases>
             <checksumPolicy>warn</checksumPolicy>
-            <enabled>false</enabled>
+            <enabled>true</enabled>
             <updatePolicy>always</updatePolicy>
           </releases>
           <snapshots>
             <checksumPolicy>fail</checksumPolicy>
-            <enabled>true</enabled>
+            <enabled>false</enabled>
             <updatePolicy>never</updatePolicy>
           </snapshots>
-          <url>http://snapshots.maven.codehaus.org/maven2</url>
+          <url>http://repo1.example.com/maven2</url>
           <layout>default</layout>
         </repository>
       </repositories>
       <pluginRepositories>
         <repository>
-          <id>codehausSnapshots</id>
+          <id>repo2</id>
+          <name>Second Repo</name>
           <releases>
-            <checksumPolicy>warn</checksumPolicy>
+            <checksumPolicy>fail</checksumPolicy>
             <enabled>false</enabled>
-            <updatePolicy>always</updatePolicy>
+            <updatePolicy>never</updatePolicy>
           </releases>
           <snapshots>
-            <checksumPolicy>fail</checksumPolicy>
+            <checksumPolicy>warn</checksumPolicy>
             <enabled>true</enabled>
-            <updatePolicy>never</updatePolicy>
+            <updatePolicy>always</updatePolicy>
           </snapshots>
-          <url>http://snapshots.maven.codehaus.org/maven2</url>
-          <layout>default</layout>
+          <url>http://repo2.example.com/maven2</url>
+          <layout>legacy</layout>
         </repository>
       </pluginRepositories>
       <properties>
         <key1>value1</key1>
       </properties>
+    </profile>
+    <profile>
+      <id>minimal_profile</id>
     </profile>
   </profiles>
 

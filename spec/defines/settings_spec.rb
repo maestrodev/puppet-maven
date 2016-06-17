@@ -72,42 +72,44 @@ describe "maven::settings" do
         }
       },
       'repositories' => {
-        'codehausSnapshots' => {
-          'name' => 'Codehaus Snapshots',
+        'repo1' => {
+          'name' => 'First Repo',
           'releases' => {
-            'enabled' => false,
+            'enabled' => true,
             'updatePolicy' => 'always',
             'checksumPolicy' => 'warn'
           },
           'snapshots' => {
-            'enabled' => true,
+            'enabled' => false,
             'updatePolicy' => 'never',
             'checksumPolicy' => 'fail'
           },
-          'url' => 'http://snapshots.maven.codehaus.org/maven2',
+          'url' => 'http://repo1.example.com/maven2',
           'layout' => 'default'
         }
       },
-      'plugin_repositories' => {
-        'codehausSnapshots' => {
-          'name' => 'Codehaus Snapshots',
+      'pluginRepositories' => {
+        'repo2' => {
+          'name' => 'Second Repo',
           'releases' => {
             'enabled' => false,
-            'update_policy' => 'always',
-            'checksum_policy' => 'warn'
-          },
-          'snapshots' => {
-            'enabled' => true,
             'updatePolicy' => 'never',
             'checksumPolicy' => 'fail'
           },
-          'url' => 'http://snapshots.maven.codehaus.org/maven2',
-          'layout' => 'default'
+          'snapshots' => {
+            'enabled' => true,
+            'updatePolicy' => 'always',
+            'checksumPolicy' => 'warn'
+          },
+          'url' => 'http://repo2.example.com/maven2',
+          'layout' => 'legacy'
         }
       },
       'properties' => {
           'key1' => 'value1'
       }
+    },
+    'minimal_profile' => {
     }
   }}
   let(:active_profiles) {

@@ -88,7 +88,7 @@ describe "maven::settings" do
           'layout' => 'default'
         }
       },
-      'plugin_repositories' => {
+      'pluginRepositories' => {
         'repo2' => {
           'name' => 'Second Repo',
           'releases' => {

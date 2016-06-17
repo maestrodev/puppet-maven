@@ -224,7 +224,7 @@
         <%- end -%>
       </repositories>
       <%- end -%>
-      <%- unless (profile['plugin_repositories']||[]).empty?; repositories = profile['plugin_repositories'] -%>
+      <%- unless (profile['pluginRepositories']||[]).empty?; repositories = profile['pluginRepositories'] -%>
       <pluginRepositories>
         <%- repositories.each do |repo_id, repo| -%>
         <repository>

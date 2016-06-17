@@ -104,7 +104,7 @@
 #       'layout' => 'default'
 #     }
 #   },
-#   'plugin_repositories' => {
+#   'pluginRepositories' => {
 #     'codehausSnapshots' => { # <- this becomes the repository id
 #       'name' => 'Codehaus Snapshots',
 #       'releases' => {

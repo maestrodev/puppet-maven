@@ -38,8 +38,24 @@ class maven::maven(
 
   $archive = "/tmp/apache-maven-${version}-bin.tar.gz"
 
+  # prior to puppet 3.5.0, defined() couldn't test if a variable was defined.
+  # strict_variables wasn't added until 3.5.0, so this should be fine.
+  if $::puppetversion and versioncmp($::puppetversion, '3.5.0') < 0 {
+    $xfacts = {
+      'maven_version' => $::maven_version,
+    }
+  } else {
+    # Strict variables facts lookup compatibility
+    $xfacts = {
+      'maven_version' => defined('$maven_version') ? {
+        true    => $::maven_version,
+        default => undef,
+      }
+    }
+  }
+
   # Avoid redownloading when tmp tar.gz is deleted
-  if $::maven_version != $version {
+  if $xfacts['maven_version'] != $version {
 
     # we could use puppet-stdlib function !empty(repo) but avoiding adding a new
     # dependency for now

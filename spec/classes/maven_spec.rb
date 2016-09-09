@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'maven::maven' do
   let(:title) { 'maven' }
-  let(:facts) {{ :http_proxy => '', :maven_version => '' }}
+  let(:facts) {{ :http_proxy => '', :maven_version => '', :puppetversion => Puppet.version }}
 
   context "when downloading maven", :compile do
     it do should contain_wget__fetch('fetch-maven').with(

@@ -13,6 +13,19 @@ shared_examples :maven_settings do |expected_file|
   end
 end
 
+shared_examples :maven_settings_security do |expected_file|
+
+  def read_file(filename)
+    IO.read(File.expand_path(filename, File.dirname(__FILE__)))
+  end
+
+  it { should contain_file(expected_filename).with_owner('u') }
+
+  it 'should generate valid settings.xml' do
+    should contain_file(expected_filename).with_content(read_file(expected_file))
+  end
+end
+
 describe "maven::settings" do
   let(:title) { 'settings' }
   let(:params) { {
@@ -243,5 +256,16 @@ describe "maven::settings" do
       }}
 
     it_behaves_like :maven_settings, "active-profiles-settings.xml"
+  end
+
+  context "with master password", :compile do
+    let(:expected_filename) { '/home/u/.m2/settings-security.xml' }
+    let(:params) {{
+          :user => "u",
+          :home => "/home/u",
+          :master_password => '{7837*#&$*i878283mkjdksf=}'
+      }}
+
+    it_behaves_like :maven_settings_security, "default-settings-security.xml"
   end
 end

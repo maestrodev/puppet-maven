@@ -128,10 +128,10 @@
 #
 # activeProfiles => [ 'profile1', 'profile2', ...]
 #
-define maven::settings( $home = undef, $user = 'root', $group = 'root',
+define maven::settings($home = undef, $user = 'root', $group = 'root',
   $servers = [], $mirrors = [], $default_repo_config = undef, $repos = [],
   $properties = {}, $local_repo = '', $dir_mask = '700', $file_mask = '600',
-  $proxies = [], $profiles = {}, $active_profiles = []) {
+  $proxies = [], $profiles = {}, $active_profiles = [], $master_password = undef) {
 
   if $home == undef {
     $home_real = $user ? {
@@ -156,4 +156,13 @@ define maven::settings( $home = undef, $user = 'root', $group = 'root',
     content => template('maven/settings.xml.erb'),
   }
 
+  unless $master_password == undef {
+    file { "${home_real}/.m2/settings-security.xml":
+      owner   => $user,
+      group   => $group,
+      mode    => $file_mask,
+      content => template('maven/settings-security.xml.erb'),
+      require => File["${home_real}/.m2"],
+    }
+  }
 }

@@ -41,7 +41,7 @@
         </repository>
       </repositories>
       <pluginRepositories>
-        <repository>
+        <pluginRepository>
           <id>repo2</id>
           <name>Second Repo</name>
           <releases>
@@ -56,7 +56,7 @@
           </snapshots>
           <url>http://repo2.example.com/maven2</url>
           <layout>legacy</layout>
-        </repository>
+        </pluginRepository>
       </pluginRepositories>
       <properties>
         <key1>value1</key1>

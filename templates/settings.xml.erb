@@ -30,6 +30,11 @@
 <% unless server['privateKey'].nil? -%>
       <privateKey><%= server['privateKey'] %></privateKey>
 <% end -%>
+<% unless server['configuration'].nil? -%>
+<% unless server['configuration']['email'].nil? -%>
+      <configuration><email><%= server['configuration']['email'] %></email></configuration>
+<% end -%>
+<% end -%>
     </server>
 <% end -%>
   </servers>

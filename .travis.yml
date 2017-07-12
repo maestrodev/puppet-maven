@@ -5,8 +5,7 @@
 sudo: false
 
 before_install:
-  # - rm -f Gemfile.lock
-  - bundle update puppet
+  - rm -f Gemfile.lock
 
 rvm:
   - "2.0"

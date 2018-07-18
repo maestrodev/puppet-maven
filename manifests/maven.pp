@@ -30,6 +30,7 @@
 #
 class maven::maven(
   $version = '3.2.5',
+  $basedir = '/opt',
   $repo = {
     #url      => 'http://repo1.maven.org/maven2',
     #username => '',
@@ -76,17 +77,17 @@ class maven::maven(
     }
     exec { 'maven-untar':
       command => "tar xf /tmp/apache-maven-${version}-bin.tar.gz",
-      cwd     => '/opt',
-      creates => "/opt/apache-maven-${version}",
+      cwd     => $basedir,
+      creates => "${basedir}/apache-maven-${version}",
       path    => ['/bin','/usr/bin'],
     }
 
     file { '/usr/bin/mvn':
       ensure  => link,
-      target  => "/opt/apache-maven-${version}/bin/mvn",
+      target  => "${basedir}/apache-maven-${version}/bin/mvn",
       require => Exec['maven-untar'],
-    } ->
-    file { '/usr/local/bin/mvn':
+    }
+    -> file { '/usr/local/bin/mvn':
       ensure  => absent,
     }
   }

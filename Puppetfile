@@ -1,3 +1,2 @@
 forge 'http://forge.puppetlabs.com'
-
-mod 'maestrodev/wget',     '>=1.0.0'
+mod  'puppet/archive',  '>=1.2.0'

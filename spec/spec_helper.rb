@@ -22,7 +22,8 @@ RSpec.configure do |c|
 
   c.before do
     # avoid "Only root can execute commands as other users"
-    Puppet.features.stubs(:root? => true)
+    ## the line below makes tests fail with Mocha 1.8.0
+    # Puppet.features.stubs(:root? => true)
   end
 end
 

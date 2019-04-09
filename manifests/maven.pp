@@ -60,18 +60,17 @@ class maven::maven(
     # we could use puppet-stdlib function !empty(repo) but avoiding adding a new
     # dependency for now
     if "x${repo['url']}x" != 'xx' {
-      wget::authfetch { 'fetch-maven':
-        source      => "${repo['url']}/org/apache/maven/apache-maven/${version}/apache-maven-${version}-bin.tar.gz",
-        destination => $archive,
-        user        => $repo['username'],
-        password    => $repo['password'],
-        before      => Exec['maven-untar'],
+      archive { $archive :
+        ensure   => present,
+        source   => "${repo['url']}/org/apache/maven/apache-maven/${version}/apache-maven-${version}-bin.tar.gz",
+        username => $repo['username'],
+        password => $repo['password'],
+        before   => Exec['maven-untar'],
       }
     } else {
-      wget::fetch { 'fetch-maven':
-        source      => "http://archive.apache.org/dist/maven/maven-3/${version}/binaries/apache-maven-${version}-bin.tar.gz",
-        destination => $archive,
-        before      => Exec['maven-untar'],
+      archive { $archive :
+        source => "http://archive.apache.org/dist/maven/maven-3/${version}/binaries/apache-maven-${version}-bin.tar.gz",
+        before => Exec['maven-untar'],
       }
     }
     exec { 'maven-untar':

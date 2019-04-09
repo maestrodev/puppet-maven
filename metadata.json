@@ -10,8 +10,8 @@
   "description": "A Puppet module to download artifacts from Maven repositories",
   "dependencies": [
     {
-      "name": "maestrodev/wget",
-      "version_requirement": ">=1.0.0"
+      "name": "puppet/archive",
+      "version_requirement": ">=1.2.0"
     }
   ],
   "operatingsystem_support": [
